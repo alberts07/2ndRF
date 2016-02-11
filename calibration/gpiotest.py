@@ -22,34 +22,18 @@ GPIO9  = 27 # Physical pin 15
 
 def initPins():	
 	wiringPi.wiringPiSetup();
-	wiringPi.pinMode (GPIO0, OUTPUT)
+
+        wiringPi.pinMode (GPIO0, OUTPUT)
 	wiringPi.pinMode (GPIO1, OUTPUT)
 	wiringPi.pinMode (GPIO2, OUTPUT)
-	wiringPi.pinMode (GPIO3, OUTPUT)
+
+        wiringPi.digitalWrite(GPIO0, OFF)
+        wiringPi.digitalWrite(GPIO1, OFF)
+        wiringPi.digitalWrite(GPIO2, OFF)
+        
 
 
 initPins()
-
-wiringPi.digitalWrite(GPIO0,ON)
-raw_input("Should see pin 15 on")
-wiringPi.digitalWrite(GPIO0,OFF)
-raw_input("Should see pin 15 off")
-
-wiringPi.digitalWrite(GPIO1,ON)
-raw_input("Should see pin 8 on")
-wiringPi.digitalWrite(GPIO1,OFF)
-raw_input("Should see pin 8 off")
-
-wiringPi.digitalWrite(GPIO2,ON)
-raw_input("Should see pin 24 on")
-wiringPi.digitalWrite(GPIO2,OFF)
-raw_input("Should see pin 24 off")
-
-# wiringPi.digitalWrite(GPIO0,ON)
-# raw_input("Should see pin 5 on")
-# wiringPi.digitalWrite(GPIO0,OFF)
-# raw_input("Should see pin 5 off")
-
 
 val0 = OFF
 val1 = OFF
@@ -58,9 +42,11 @@ val2 = OFF
 
 while True:
     choice = raw_input("Enter pin to toggle: ")
-    print(choice[0])
-    ch = str(choice[0])
+    
+    if choice[0] == 'q':
+            break
 
+    ch = str(choice[0])
     
     if ch == str(0):
         if val0 == OFF:
@@ -71,20 +57,20 @@ while True:
                 wiringPi.digitalWrite(GPIO0, OFF)
 
 
-    if ch == str(1):
-        if val1 == OFF:
-                val1 = ON
-                wiringPi.digitalWrite(GPIO2, ON)
-        else:
-                val1 = OFF
-                wiringPi.digitalWrite(GPIO2, OFF)
- #       print("val1 is "+val1)
-        wiringPi.digitalWrite(GPIO1,val1)
-
-    if ch == str(2):
+    elif ch == str(2):
         if val2 == OFF:
                 val2 = ON
+                wiringPi.digitalWrite(GPIO2, ON)
         else:
                 val2 = OFF
-  #      print("val2 is "+val2)
-        wiringPi.digitalWrite(GPIO2,val2)
+                wiringPi.digitalWrite(GPIO2, OFF)
+
+    elif ch == str(1):
+         if val1 == OFF:
+                val1 = ON
+                wiringPi.digitalWrite(GPIO1, ON)
+         else:
+                val1 = OFF
+                wiringPi.digitalWrite(GPIO1, OFF)
+#1=green
+#2=yellow

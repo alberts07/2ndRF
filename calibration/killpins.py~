@@ -1,0 +1,9 @@
+import wiringPi
+wiringPi.wiringPiSetup();
+wiringPi.pinMode (GPIO0, OUTPUT)
+wiringPi.pinMode (GPIO1, OUTPUT)
+wiringPi.pinMode (GPIO2, OUTPUT)
+
+wiringPi.digitalWrite(NS, OFF)
+wiringPi.digitalWrite(SWITCH, OFF)
+wiringPi.digitalWrite(GPIO2, OFF

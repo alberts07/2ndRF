@@ -357,7 +357,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>5E6</value>
+      <value>1</value>
     </param>
   </block>
   <block>
@@ -537,7 +537,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>0</value>
+      <value>30</value>
     </param>
   </block>
   <block>
@@ -1596,7 +1596,7 @@
     </param>
     <param>
       <key>center_freq0</key>
-      <value>f0</value>
+      <value>3.625E9</value>
     </param>
     <param>
       <key>dc_offs_enb0</key>

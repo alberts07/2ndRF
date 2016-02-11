@@ -13,10 +13,10 @@ import numpy
 import time
 import top_block
 import socket
-
+import scipy
 
 import wiringPi
-
+import struct
 #This is the website for the Physical Pin out for Odroid XU4
 #http://odroid.com/dokuwiki/doku.php?id=en:xu3_hardware_gpio
 
@@ -36,13 +36,20 @@ GPIO7  = 6  # Physcial pin 26
 GPIO8  = 22 # Physcial pin 19
 GPIO9  = 27 # Physical pin 15
 
+SWITCH = 15
+NS     = 0
+GND    = 21
+
+
 def initPins():	
 	wiringPi.wiringPiSetup();
 	wiringPi.pinMode (GPIO0, OUTPUT)
 	wiringPi.pinMode (GPIO1, OUTPUT)
 	wiringPi.pinMode (GPIO2, OUTPUT)
-	wiringPi.pinMode (GPIO3, OUTPUT)
-        print("Pins initialized")
+
+        wiringPi.digitalWrite(NS, OFF)
+        wiringPi.digitalWrite(SWITCH, OFF)
+        wiringPi.digitalWrite(GPIO2, OFF)
 
 
 #from datetime import datetime
@@ -52,9 +59,14 @@ def initPins():
 # todo place try except block
 
 def readBinFile(file):
-
-    data = numpy.fromfile(file)
-    return data.mean()
+    f = scipy.fromfile(open(file), dtype = scipy.float32)
+    #data = numpy.fromfile(file)
+    #print(data)
+    #print(data.mean)
+    print(f)
+    f.mean()
+    print(f.mean())
+    return f.mean()
 
 def runGNU(top_block_file):
 
@@ -62,12 +74,13 @@ def runGNU(top_block_file):
 
 
 def NoiseFig(N2,N1):
-    ENR=14.85
-    N2lin = 10**(N2/10)
-    N2lin  = 2 ################### DIPSHIT REMOVE THIS
-    N1lin = 10**(N1/10)
+    ENR=30
+    #N2lin = 10**(N2/10)
+  #  N2lin  = 2 ################################# DIPSHIT REMOVE THIS
+    #N1lin = 10**(N1/10)
     YF=N2lin/N1lin
     NF= ENR-10*math.log(YF-1,10)
+    print NF
     #gpsinfo = None
     #while gpsinfo == None:
     #    gpsinfo = GPS_runner.runner()
@@ -140,9 +153,8 @@ serverIP = '192.168.130.100'
 if __name__ == "__main__":
 
     initPins()
-    wiringPi.digitalWrite(GPIO0, ON)
-    raw_input("Look at LED, then press ENTER")
-    wiringPi.digitalWrite(GPIO0, OFF)
+    wiringPi.digitalWrite(SWITCH, ON)
+    raw_input("verify switch on")
     
     print("The noise with the noise source off will now be calculated")
     #Call SDR
@@ -153,28 +165,39 @@ if __name__ == "__main__":
 
     # The system should turn the noise source on now
     raw_input("Press ENTER to start the noise source and continue")
-    wiringPi.digitalWrite(GPIO0, ON)
+       
+    wiringPi.digitalWrite(NS, ON)
+
+    
     print("Noise source warming up")
     time.sleep(5)
-    print("Continuing with the test")
+    print("10 seconds left in warmup")
+    time.sleep(5)
+    print("5 seconds left in warmup")
+    time.sleep(5)
+    print("Continuing test")
     
     # Call SDR
     runGNU(top_block)
     # Ends in the script
     N2 = readBinFile("Power")
+    print("The difference is \n")
+    print(N2-N1)
     data = NoiseFig(N2,N1)
     #print(data)
     row = filewrite(data)
 
-
-    outFilename = "rowdata.txt"
+    outFilename = "data.csv"
     cmd = "PUT " + outFilename
     putToServer(cmd, row)
 
     # Now wait to receive another response
     buff = sock.recv(1024)
     print("Received: " + buff)
+    
     wiringPi.digitalWrite(GPIO0, OFF)
+    wiringPi.digitalWrite(GPIO1, OFF)
+    wiringPi.digitalWrite(GPIO2, OFF)
 
     killClient()
 

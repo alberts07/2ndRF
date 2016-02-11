@@ -13,9 +13,10 @@ import numpy
 import time
 import top_block
 import socket
-import time
-import wiringPi
+import scipy
 
+import wiringPi
+import struct
 #This is the website for the Physical Pin out for Odroid XU4
 #http://odroid.com/dokuwiki/doku.php?id=en:xu3_hardware_gpio
 
@@ -35,6 +36,21 @@ GPIO7  = 6  # Physcial pin 26
 GPIO8  = 22 # Physcial pin 19
 GPIO9  = 27 # Physical pin 15
 
+SWITCH = 15
+NS     = 0
+GND    = 21
+
+
+def initPins():	
+	wiringPi.wiringPiSetup();
+	wiringPi.pinMode (GPIO0, OUTPUT)
+	wiringPi.pinMode (GPIO1, OUTPUT)
+	wiringPi.pinMode (GPIO2, OUTPUT)
+
+        wiringPi.digitalWrite(NS, OFF)
+        wiringPi.digitalWrite(SWITCH, OFF)
+        wiringPi.digitalWrite(GPIO2, OFF)
+
 
 #from datetime import datetime
 
@@ -43,9 +59,14 @@ GPIO9  = 27 # Physical pin 15
 # todo place try except block
 
 def readBinFile(file):
-
-    data = numpy.fromfile(file)
-    return data.mean()
+    f = scipy.fromfile(open(file), dtype = scipy.float32)
+    #data = numpy.fromfile(file)
+    #print(data)
+    #print(data.mean)
+    print(f)
+    f.mean()
+    print(f.mean())
+    return f.mean()
 
 def runGNU(top_block_file):
 
@@ -53,17 +74,19 @@ def runGNU(top_block_file):
 
 
 def NoiseFig(N2,N1):
-    ENR=14.85
-    N2lin = 10**(N2/10)
-    N2lin  = 2 ################### DIPSHIT REMOVE THIS
-    N1lin = 10**(N1/10)
+    ENR=30
+    #N2lin = 10**(N2/10)
+  #  N2lin  = 2 ################################# DIPSHIT REMOVE THIS
+    #N1lin = 10**(N1/10)
     YF=N2lin/N1lin
     NF= ENR-10*math.log(YF-1,10)
-    gpsinfo = None
-    while gpsinfo == None:
-        gpsinfo = GPS_runner.runner()
-    gpsinfo.append(NF)
-    return gpsinfo
+    print NF
+    #gpsinfo = None
+    #while gpsinfo == None:
+    #    gpsinfo = GPS_runner.runner()
+    #gpsinfo.append(NF)
+    #return gpsinfo
+    return NF
 
 def filewrite(data):
     path = '~/sensor/data_archive/'
@@ -75,10 +98,10 @@ def filewrite(data):
         wb = copy(rb)  # a writable copy (I can't read values out of this, only write to it)
         w_sheet = wb.get_sheet(0)  # the sheet to write to within the writable copy
         row = r_sheet.nrows+1
-        for i in range(len(data)):
-            w_sheet.write(row-1, i, data[i])
+        #for i in range(len(data)):
+        w_sheet.write(row-1, 0, data)
         wb.save(finalpath)
-        print("Successfully wrote %.2f as NF at time %s at %s Lat %s Lon and %.2f Alt  \n" %(data[-1], data[0],data[1], data[2], data[3]))
+        #print("Successfully wrote %.2f as NF at time %s at %s Lat %s Lon and %.2f Alt  \n" %(data[-1], data[0],data[1], data[2], data[3]))
     except IOError:
         print("The file name, %s, is not valid" %finalpath)
 
@@ -93,12 +116,13 @@ def putToServer(cmd, buff):
     # First connect to the server, then send the message
     sock.connect((serverIP, port))
     sock.send(cmd)
+    #print("sent " + cmd)
 
-    # Wait for the response from the server indicating it's ready to receive
+    # Wait for the response from the server indicating it's ready
     while True:
         resp = ""
         resp = sock.recv(1024)
-
+        print("RECIEVED " + resp)
         if resp[0:5] == "READY":
 
             # print("sending: " + buff)
@@ -111,7 +135,6 @@ def putToServer(cmd, buff):
         elif resp[0:5] == "ERROR":
             print("There was an error on the server.")
             break
-    
         # Handle unknowns
         else:
             print("Didn't understand response")
@@ -122,15 +145,6 @@ def killClient():
     sock.send("QUIT")
     sock.close()
 
-
-def initPins():	
-	wiringPi.wiringPiSetup();
-	wiringPi.pinMode (GPIO0, OUTPUT)
-	# wiringPi.pinMode (GPIO1, OUTPUT)
-	# wiringPi.pinMode (GPIO2, OUTPUT)
-	# wiringPi.pinMode (GPIO3, OUTPUT)
-
-
 # Set up the socket for the client
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM,0)
 port = 18999 # This is just a random port chosen to try to avoid other used ones
@@ -139,8 +153,8 @@ serverIP = '192.168.130.100'
 if __name__ == "__main__":
 
     initPins()
-    wiringPi.digitalWrite(GPIO0, OFF)
-
+    wiringPi.digitalWrite(SWITCH, ON)
+    raw_input("verify switch on")
     
     print("The noise with the noise source off will now be calculated")
     #Call SDR
@@ -149,35 +163,10 @@ if __name__ == "__main__":
 
     N1 = readBinFile("Power")
 
-    # The system should turn the noise source on now
-    raw_input("Press ENTER to start the noise source and continue")
-    wiringPi.digitalWrite(GPIO0, ON)
-    print("Noise source warming up")
-    time.sleep(5)
-    
-    # Call SDR
-    runGNU(top_block)
-    # Ends in the script
-    N2 = readBinFile("Power")
-#    data = NoiseFig(N2,N1)
-#    row = filewrite(data)
-
-
-
-    row = "GPS DATA HERE"
+ 
     wiringPi.digitalWrite(GPIO0, OFF)
+    wiringPi.digitalWrite(GPIO1, OFF)
+    wiringPi.digitalWrite(GPIO2, OFF)
 
-    
-    # setup the filename and send the data to the server
-    outFilename = "rowdata.txt"
-    cmd = "PUT " + outFilename
-    putToServer(cmd, row)
-
-    # Now wait to receive another response
-    buff = sock.recv(1024)
-    print("Received: " + buff)
-
-    # Finally shut the program down
-    killClient()
 
 
