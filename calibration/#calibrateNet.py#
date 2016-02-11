@@ -140,6 +140,8 @@ if __name__ == "__main__":
 
     initPins()
     wiringPi.digitalWrite(GPIO0, OFF)
+
+    
     print("The noise with the noise source off will now be calculated")
     #Call SDR
     runGNU(top_block)
@@ -176,7 +178,6 @@ if __name__ == "__main__":
     print("Received: " + buff)
 
     # Finally shut the program down
-
     killClient()
 
 
