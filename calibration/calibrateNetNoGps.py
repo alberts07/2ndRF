@@ -86,10 +86,10 @@ def filewrite(data):
         wb = copy(rb)  # a writable copy (I can't read values out of this, only write to it)
         w_sheet = wb.get_sheet(0)  # the sheet to write to within the writable copy
         row = r_sheet.nrows+1
-        for i in range(len(data)):
-            w_sheet.write(row-1, i, data[i])
+        #for i in range(len(data)):
+        w_sheet.write(row-1, 0, data)
         wb.save(finalpath)
-        print("Successfully wrote %.2f as NF at time %s at %s Lat %s Lon and %.2f Alt  \n" %(data[-1], data[0],data[1], data[2], data[3]))
+        #print("Successfully wrote %.2f as NF at time %s at %s Lat %s Lon and %.2f Alt  \n" %(data[-1], data[0],data[1], data[2], data[3]))
     except IOError:
         print("The file name, %s, is not valid" %finalpath)
 
