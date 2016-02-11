@@ -55,7 +55,6 @@ def filewrite(data):
         wb = copy(rb)  # a writable copy (I can't read values out of this, only write to it)
         w_sheet = wb.get_sheet(0)  # the sheet to write to within the writable copy
         row = r_sheet.nrows+1
-        print(data)
         for i in range(len(data)):
             w_sheet.write(row-1, i, data[i])
         wb.save(finalpath)
@@ -68,7 +67,6 @@ def filewrite(data):
     for col_idx in range(ncols):
         cellobj = r_sheet.cell_value(row-2, col_idx)
         rowbuff = rowbuff + str(cellobj)+ ' '
-    print(rowbuff)
     return rowbuff
 
 def putToServer(cmd, buff):
@@ -78,10 +76,11 @@ def putToServer(cmd, buff):
 
     # Wait for the response from the server indicating it's ready
     while True:
+        buff = ""
         buff = sock.recv(1024)
         if buff[0:5] == "READY":
 
-            print "sending" + cmd
+            print "sending " + cmd
 
             # send the file
             sock.send(buff)
@@ -117,7 +116,7 @@ if __name__ == "__main__":
     # Ends in the script
     N2 = readBinFile("Power")
     data = NoiseFig(N2,N1)
-    print(data)
+    #print(data)
     row = filewrite(data)
 
 

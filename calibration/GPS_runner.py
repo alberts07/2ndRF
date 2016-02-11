@@ -5,6 +5,4 @@ def runner():
 		MSODobject=subroutine("msod")
 	#print(str(MSODobject.timestamp))
 	strarray= [str(MSODobject.timestamp), MSODobject.lat, MSODobject.lon, MSODobject.altitude]	
-	print(strarray)
-	print(type(strarray))
 	return strarray
