@@ -65,29 +65,7 @@ def NoiseFig(N2,N1):
     gpsinfo.append(NF)
     return gpsinfo
 
-def filewrite(data):
-    path = '~/sensor/data_archive/'
-    finalpath ='/home/odroid/sensor/data_archive/NoiseFigure.xls'
 
-    try:
-        rb = open_workbook(finalpath, formatting_info=True)
-        r_sheet = rb.sheet_by_index(0)  # read only copy to introspect the file
-        wb = copy(rb)  # a writable copy (I can't read values out of this, only write to it)
-        w_sheet = wb.get_sheet(0)  # the sheet to write to within the writable copy
-        row = r_sheet.nrows+1
-        for i in range(len(data)):
-            w_sheet.write(row-1, i, data[i])
-        wb.save(finalpath)
-        print("Successfully wrote %.2f as NF at time %s at %s Lat %s Lon and %.2f Alt  \n" %(data[-1], data[0],data[1], data[2], data[3]))
-    except IOError:
-        print("The file name, %s, is not valid" %finalpath)
-
-    rowbuff = ""
-    ncols = r_sheet.ncols
-    for col_idx in range(ncols):
-        cellobj = r_sheet.cell_value(row-2, col_idx)
-        rowbuff = rowbuff + str(cellobj)+ ' '
-    return rowbuff
 
 def putToServer(cmd, buff):
     # First connect to the server, then send the message
@@ -181,3 +159,30 @@ if __name__ == "__main__":
     killClient()
 
 
+
+
+
+""" The code below is likely not needed, but might be needed in the future"""
+# def filewrite(data):
+#     path = '~/sensor/data_archive/'
+#     finalpath ='/home/odroid/sensor/data_archive/NoiseFigure.xls'
+
+#     try:
+#         rb = open_workbook(finalpath, formatting_info=True)
+#         r_sheet = rb.sheet_by_index(0)  # read only copy to introspect the file
+#         wb = copy(rb)  # a writable copy (I can't read values out of this, only write to it)
+#         w_sheet = wb.get_sheet(0)  # the sheet to write to within the writable copy
+#         row = r_sheet.nrows+1
+#         for i in range(len(data)):
+#             w_sheet.write(row-1, i, data[i])
+#         wb.save(finalpath)
+#         print("Successfully wrote %.2f as NF at time %s at %s Lat %s Lon and %.2f Alt  \n" %(data[-1], data[0],data[1], data[2], data[3]))
+#     except IOError:
+#         print("The file name, %s, is not valid" %finalpath)
+
+#     rowbuff = ""
+#     ncols = r_sheet.ncols
+#     for col_idx in range(ncols):
+#         cellobj = r_sheet.cell_value(row-2, col_idx)
+#         rowbuff = rowbuff + str(cellobj)+ ' '
+#     return rowbuff

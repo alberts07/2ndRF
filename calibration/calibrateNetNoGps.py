@@ -75,32 +75,14 @@ def NoiseFig(N2,N1):
 
     ENR = 30
 
-
-    # Testing Doug's stuff
-    #Z = 50
-    #N2_W = numpy.square(numpy.absolute(N2)) / Z
-    #N1_W = numpy.square(numpy.absolute(N1)) / Z
-    #N2mean_W = numpy.mean(N2_W)
-    #N1mean_W = numpy.mean(N1_W)
-    #N2mean_dBW = 10 * numpy.log10(N2mean_W)
-    #N1mean_dBW = 10 * numpy.log10(N1mean_W)
-    #ENR_W = numpy.power(10, ENR / 10.0)
-    #YF = N2mean_W/N1mean_W
-    #NF = ENR_W / (YF-1)
-    #NF = 10 * numpy.log10(NF)
-
-    #My code starts
+    #My code starts here
 
     #N2 = N2**2 / 50
     #print(N2)
     
-
-    
-    
     #N2 = 10 * numpy.log10(N2)
     N2 = N2[::2]
     #N1 = N1**2 / 50
-    
     #print(N1)
     
     
@@ -125,32 +107,9 @@ def NoiseFig(N2,N1):
     #while gpsinfo == None:
     #    gpsinfo = GPS_runner.runner()
     #gpsinfo.append(NF)
-    #return gpsinfo
+    #return gpsinfo  #NF = "some gps data" + str(NF)
     return NF
 
-#~ def filewrite(data):
-    #~ path = '~/sensor/data_archive/'
-    #~ finalpath ='/home/odroid/sensor/data_archive/NoiseFigure.xls'
-
-    #~ try:
-        #~ rb = open_workbook(finalpath, formatting_info=True)
-        #~ r_sheet = rb.sheet_by_index(0)  # read only copy to introspect the file
-        #~ wb = copy(rb)  # a writable copy (I can't read values out of this, only write to it)
-        #~ w_sheet = wb.get_sheet(0)  # the sheet to write to within the writable copy
-        #~ row = r_sheet.nrows+1
-        #~ #for i in range(len(data)):
-        #~ w_sheet.write(row-1, 0, data)
-        #~ wb.save(finalpath)
-        #~ #print("Successfully wrote %.2f as NF at time %s at %s Lat %s Lon and %.2f Alt  \n" %(data[-1], data[0],data[1], data[2], data[3]))
-    #~ except IOError:
-        #~ print("The file name, %s, is not valid" %finalpath)
-
-    #~ rowbuff = ""
-    #~ ncols = r_sheet.ncols
-    #~ for col_idx in range(ncols):
-        #~ cellobj = r_sheet.cell_value(row-2, col_idx)
-        #~ rowbuff = rowbuff + str(cellobj)+ ' '
-    #~ return rowbuff
 
 def fileInit():
     with open('NoiseFigure.csv', 'w') as csvfile:
@@ -282,3 +241,44 @@ if __name__ == "__main__":
         wiringPi.digitalWrite(GPIO2, OFF)
 
 
+
+""" The code below is not used right now, but should be saved for now. """
+
+# Testing Doug's stuff
+    #Z = 50
+    #N2_W = numpy.square(numpy.absolute(N2)) / Z
+    #N1_W = numpy.square(numpy.absolute(N1)) / Z
+    #N2mean_W = numpy.mean(N2_W)
+    #N1mean_W = numpy.mean(N1_W)
+    #N2mean_dBW = 10 * numpy.log10(N2mean_W)
+    #N1mean_dBW = 10 * numpy.log10(N1mean_W)
+    #ENR_W = numpy.power(10, ENR / 10.0)
+    #YF = N2mean_W/N1mean_W
+    #NF = ENR_W / (YF-1)
+    #NF = 10 * numpy.log10(NF)
+
+
+
+#~ def filewrite(data):
+    #~ path = '~/sensor/data_archive/'
+    #~ finalpath ='/home/odroid/sensor/data_archive/NoiseFigure.xls'
+
+    #~ try:
+        #~ rb = open_workbook(finalpath, formatting_info=True)
+        #~ r_sheet = rb.sheet_by_index(0)  # read only copy to introspect the file
+        #~ wb = copy(rb)  # a writable copy (I can't read values out of this, only write to it)
+        #~ w_sheet = wb.get_sheet(0)  # the sheet to write to within the writable copy
+        #~ row = r_sheet.nrows+1
+        #~ #for i in range(len(data)):
+        #~ w_sheet.write(row-1, 0, data)
+        #~ wb.save(finalpath)
+        #~ #print("Successfully wrote %.2f as NF at time %s at %s Lat %s Lon and %.2f Alt  \n" %(data[-1], data[0],data[1], data[2], data[3]))
+    #~ except IOError:
+        #~ print("The file name, %s, is not valid" %finalpath)
+
+    #~ rowbuff = ""
+    #~ ncols = r_sheet.ncols
+    #~ for col_idx in range(ncols):
+        #~ cellobj = r_sheet.cell_value(row-2, col_idx)
+        #~ rowbuff = rowbuff + str(cellobj)+ ' '
+    #~ return rowbuff

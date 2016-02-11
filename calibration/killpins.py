@@ -16,7 +16,7 @@ GPIO7  = 6  # Physcial pin 26
 GPIO8  = 22 # Physcial pin 19
 GPIO9  = 27 # Physical pin 15
 
-wiringPi.wiringPiSetup();
+wiringPi.wiringPiSetup()
 wiringPi.pinMode (GPIO0, OUTPUT)
 wiringPi.pinMode (GPIO1, OUTPUT)
 wiringPi.pinMode (GPIO2, OUTPUT)
