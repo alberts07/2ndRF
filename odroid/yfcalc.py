@@ -42,7 +42,10 @@ def filewrite(data):
 		print("Successfully wrote %f and %s" %(data[0], data[1]))
 	except:
 		print("Failed to write the NoiseFigure")
+<<<<<<< HEAD:yfcalc.py
 
 
 data=NoiseFig(795.02,7.9499)
 filewrite(data)
+=======
+>>>>>>> 8047181fdcfab2bcf9f07300f9997d9c1a659557:odroid/yfcalc.py
