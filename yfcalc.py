@@ -42,3 +42,7 @@ def filewrite(data):
 		print("Successfully wrote %f and %s" %(data[0], data[1]))
 	except:
 		print("Failed to write the NoiseFigure")
+
+
+data=NoiseFig(795.02,7.9499)
+filewrite(data)
