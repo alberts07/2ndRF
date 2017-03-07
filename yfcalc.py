@@ -7,10 +7,10 @@
 import math
 import numpy as np
 
-def NoiseFig(N2,N1):
-
-	ENR=15
+def NoiseFig(ENR,N2,N1):
 	YF=N2/N1
 	print(YF)
 	NF=ENR-10*math.log10(YF-1)
-	return NF
+	data= (NF,YF)
+def filewrite(data):
+	
