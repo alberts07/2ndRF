@@ -20,7 +20,7 @@ def NoiseFig(N2,N1):
 	except TypeError:
 		print("You need to enter a number")
 def filewrite(data):
-
+	path = '/home/sensor/data_archive/'
 	wb = xlwt.Workbook()
 	ws = wb.add_sheet("Noise Figure")  # Edit TimeStamps to whatever you would like to name your file
 
@@ -32,12 +32,13 @@ def filewrite(data):
 
 	# *********************************************************
 
-		wb.save("NoiseFigure.xls")
+		wb.save(path+"NoiseFigure.xls")
 		row=1
 		for i in range(len(data)):
 			ws.write(row, i, data[i])
 		row = row + 1
-		wb.save("NoiseFigure.xls")
+		print(path+"NoiseFigure.xls")
+		wb.save(path+"NoiseFigure.xls")
 		print("Successfully wrote %f and %s" %(data[0], data[1]))
 	except:
-		print("Failed to write the Noise Figure")
+		print("Failed to write the NoiseFigure")
