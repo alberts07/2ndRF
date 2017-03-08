@@ -1,0 +1,7 @@
+# import libsay
+
+print("In python")
+
+# libsay.sayWord("1")
+
+print("back to python")
