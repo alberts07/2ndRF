@@ -1,9 +1,9 @@
 from distutils.core import setup, Extension
 
-module1 = Extension('libsay', sources = ['say.c'])
+module1 = Extension('libgpio', sources = ['gpio.c'])
 
 setup (name = 'PackageName',
        version = '1.0',
-       description = 'says stuff',
+       description = 'turns stuff on',
        ext_modules = [module1])
 

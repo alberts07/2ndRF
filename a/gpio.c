@@ -9,7 +9,7 @@
 #define gpio3   11//physical pin 20
 
 
-static PyObject* saySomething(PyObject* self, PyObject* args){
+static PyObject* gpioswitch(PyObject* self, PyObject* args){
   // onoff is the toggle value for what ever switch is getting switched
   // int onoff = 0;
 
@@ -43,14 +43,14 @@ static PyObject* saySomething(PyObject* self, PyObject* args){
   return Py_None;//Py_BuildValue("s","hello");
 }
 
-static PyMethodDef SayMethods[] =
+static PyMethodDef GPIOMethods[] =
 {
-  {"saySomething", saySomething, METH_VARARGS, "Pass a number."},
+  {"gpioswitch", gpioswitch, METH_VARARGS, "Pass a number."},
   {NULL, NULL, 0, NULL}
 };
 
 PyMODINIT_FUNC initlibsay(void) {
-  (void) Py_InitModule("libsay", SayMethods);
+  (void) Py_InitModule("libgpio", GPIOMethods);
   wiringPiSetup();
   pinMode (gpio, OUTPUT) ;
   pinMode (gpio1, OUTPUT);
