@@ -15,7 +15,9 @@ from datetime import datetime
 def NoiseFig(N2,N1):
 
 	try:
-		ENR=15
+		ENR=14.85
+		N2=10**(N2/10)
+		N1=10**(N1/10)
 		YF=N2/N1
 		NF= ENR-10*math.log(YF-1,10)
 		return (NF, str(datetime.now()))
