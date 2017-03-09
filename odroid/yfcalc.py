@@ -15,7 +15,7 @@ def NoiseFig(N2,N1):
 	try:
 		ENR=15
 		YF=N2/N1
-		NF= abs(ENR-10*math.log(YF-1,10))
+		NF= ENR-10*math.log(YF-1,10)
 		return (NF, str(datetime.now()))
 	except TypeError:
 		print("You need to enter a number")
