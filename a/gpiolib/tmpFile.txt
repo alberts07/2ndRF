@@ -1,0 +1,63 @@
+
+ struct wiringPiNodeStruct *wiringPiFindNode (int pin) ;
+ struct wiringPiNodeStruct *wiringPiNewNode  (int pinBase, int numPins) ;
+ int  wiringPiSetup       (void) ;
+ int  wiringPiSetupSys    (void) ;
+ int  wiringPiSetupGpio   (void) ;
+ int  wiringPiSetupPhys   (void) ;
+ void pinModeAlt          (int pin, int mode) ;
+ void pinMode             (int pin, int mode) ;
+ void pullUpDnControl     (int pin, int pud) ;
+ int  digitalRead         (int pin) ;
+ void digitalWrite        (int pin, int value) ;
+ void pwmWrite            (int pin, int value) ;
+ int  analogRead          (int pin) ;
+ void analogWrite         (int pin, int value) ;
+
+
+ int  wiringPiSetupPiFace (void) ;
+ int  wiringPiSetupPiFaceForGpioProg (void) ;
+ int  waitForInterrupt    (int pin, int mS) ;
+ int  wiringPiISR         (int pin, int mode, void (*function)(void)) ;
+ int  piThreadCreate      (void *(*fn)(void *)) ;
+ void piLock              (int key) ;
+ void piUnlock            (int key) ;
+ int  piHiPri (const int pri) ;
+ void         delay             (unsigned int howLong) ;
+ void         delayMicroseconds (unsigned int howLong) ;
+ unsigned int millis            (void) ;
+ unsigned int micros            (void) ;
+
+
+
+
+
+
+ struct wiringPiNodeStruct *wiringPiFindNode (int pin) ;
+ struct wiringPiNodeStruct *wiringPiNewNode  (int pinBase, int numPins) ;
+ int  wiringPiSetup       (void) ;
+ int  wiringPiSetupSys    (void) ;
+ int  wiringPiSetupGpio   (void) ;
+ int  wiringPiSetupPhys   (void) ;
+ void pinModeAlt          (int pin, int mode) ;
+ void pinMode             (int pin, int mode) ;
+ void pullUpDnControl     (int pin, int pud) ;
+ int  digitalRead         (int pin) ;
+ void digitalWrite        (int pin, int value) ;
+ void pwmWrite            (int pin, int value) ;
+ int  analogRead          (int pin) ;
+ void analogWrite         (int pin, int value) ;
+
+
+ int  wiringPiSetupPiFace (void) ;
+ int  wiringPiSetupPiFaceForGpioProg (void) ;
+ int  waitForInterrupt    (int pin, int mS) ;
+ int  wiringPiISR         (int pin, int mode, void (*function)(void)) ;
+ int  piThreadCreate      (void *(*fn)(void *)) ;
+ void piLock              (int key) ;
+ void piUnlock            (int key) ;
+ int  piHiPri (const int pri) ;
+ void         delay             (unsigned int howLong) ;
+ void         delayMicroseconds (unsigned int howLong) ;
+ unsigned int millis            (void) ;
+ unsigned int micros            (void) ;
