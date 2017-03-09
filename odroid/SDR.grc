@@ -152,7 +152,70 @@
     </param>
     <param>
       <key>value</key>
-      <value>signal*2</value>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(704, 8)</value>
+    </param>
+    <param>
+      <key>gui_hint</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>gain</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value></value>
+    </param>
+    <param>
+      <key>min_len</key>
+      <value>200</value>
+    </param>
+    <param>
+      <key>orient</key>
+      <value>Qt.Horizontal</value>
+    </param>
+    <param>
+      <key>start</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>step</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>stop</key>
+      <value>30</value>
+    </param>
+    <param>
+      <key>rangeType</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>widget</key>
+      <value>counter_slider</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_qtgui_range</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>25E6</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -192,11 +255,11 @@
     </param>
     <param>
       <key>step</key>
-      <value>1E9</value>
+      <value>1E6</value>
     </param>
     <param>
       <key>stop</key>
-      <value>3000E9</value>
+      <value>25E6</value>
     </param>
     <param>
       <key>rangeType</key>
@@ -341,7 +404,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -478,7 +541,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -521,11 +584,11 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(320, 260)</value>
+      <value>(448, 268)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1402,7 +1465,7 @@
     </param>
     <param>
       <key>srate</key>
-      <value>32E3</value>
+      <value>samp_rate</value>
     </param>
     <param>
       <key>tr_chan</key>
@@ -2804,11 +2867,11 @@
     </param>
     <param>
       <key>bw0</key>
-      <value>0</value>
+      <value>012.56</value>
     </param>
     <param>
       <key>center_freq0</key>
-      <value>0</value>
+      <value>797E6</value>
     </param>
     <param>
       <key>dc_offs_enb0</key>
@@ -2824,7 +2887,7 @@
     </param>
     <param>
       <key>gain0</key>
-      <value>0</value>
+      <value>gain</value>
     </param>
     <param>
       <key>lo_export0</key>
@@ -3976,7 +4039,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(64, 164)</value>
+      <value>(56, 140)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -4104,7 +4167,7 @@
     </param>
     <param>
       <key>samp_rate</key>
-      <value>32E3</value>
+      <value>samp_rate</value>
     </param>
     <param>
       <key>hide_cmd_port</key>
@@ -4194,6 +4257,12 @@
   <connection>
     <source_block_id>uhd_usrp_source_1</source_block_id>
     <sink_block_id>blocks_complex_to_float_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>uhd_usrp_source_1</source_block_id>
+    <sink_block_id>blocks_complex_to_mag_squared_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
