@@ -561,7 +561,11 @@
     </param>
     <param>
       <key>file</key>
+<<<<<<< HEAD
       <value>/home/richard/2ndRF/SDR/testN2</value>
+=======
+      <value>/home/odroid/Documents/2ndRF/SDR/testN1</value>
+>>>>>>> 3a946eb8fc5246dc690f88de3a4368b5ace3a7f3
     </param>
     <param>
       <key>_coordinate</key>
@@ -1283,6 +1287,7 @@
       <value>True</value>
     </param>
     <param>
+<<<<<<< HEAD
       <key>showports</key>
       <value>True</value>
     </param>
@@ -1310,6 +1315,8 @@
       <value>False</value>
     </param>
     <param>
+=======
+>>>>>>> 3a946eb8fc5246dc690f88de3a4368b5ace3a7f3
       <key>alias</key>
       <value></value>
     </param>
