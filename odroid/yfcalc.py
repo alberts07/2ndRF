@@ -5,8 +5,9 @@
 # Calculate NF by taking ENR and subtracting 10log(Yfac-1)
 # ENR is  30db but will be calculated when parts in 
 import math
-import numpy as np
-import xlwt
+from xlrd import open_workbook # http://pypi.python.org/pypi/xlrd
+from xlutils.copy import copy
+
 from datetime import datetime
 
 
@@ -21,24 +22,17 @@ def NoiseFig(N2,N1):
 		print("You need to enter a number")
 def filewrite(data):
 	path = '/home/sensor/data_archive/'
-	wb = xlwt.Workbook()
-	ws = wb.add_sheet("Noise Figure")  # Edit TimeStamps to whatever you would like to name your file
 
-	# ******* Setting up Headers ******************************
-	print("Attempting to write to file")
 	try:
-		ws.write(0, 0, "Noise Figure")
-		ws.write(0, 1, "Time")
-
-	# *********************************************************
-
-		wb.save(path+"NoiseFigure.xls")
-		row=1
+		rb = open_workbook("NoiseFigure.xls", formatting_info=True)
+		r_sheet = rb.sheet_by_index(0)  # read only copy to introspect the file
+		wb = copy(rb)  # a writable copy (I can't read values out of this, only write to it)
+		w_sheet = wb.get_sheet(0)  # the sheet to write to within the writable copy
+		row = r_sheet.nrows+1
 		for i in range(len(data)):
-			ws.write(row, i, data[i])
-		row = row + 1
+			w_sheet.write(row-1, i, data[i])
 		print(path+"NoiseFigure.xls")
-		wb.save(path+"NoiseFigure.xls")
+		wb.save("NoiseFigure.xls")
 		print("Successfully wrote %f and %s" %(data[0], data[1]))
 	except:
 		print("Failed to write the NoiseFigure")
