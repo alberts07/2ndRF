@@ -60,7 +60,6 @@ def subroutine(choice):
 				s1 = ser.readline()        		#When found, read the line because NMEA ends with new line char
 				if (s1[2:5] == 'GGA'):
 					msg = pynmea2.parse(s1, 4800)		#Pynmea2 allows you to parse the string and put data in the object specified
-					print(msg.lat)
 					msg.lat=float(msg.lat)/100
 					msg.lon=float(msg.lon)/100
 					if(msg.lat_dir=='S'):
