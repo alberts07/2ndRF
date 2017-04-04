@@ -26,7 +26,7 @@ def NoiseFig(N2,N1):
     return gpsinfo
 
 def filewrite(data):
-    path = '/home/sensor/data_archive/'
+    path = '~/sensor/data_archive/'
     finalpath ='NoiseFigure.xls'
 
     try:
