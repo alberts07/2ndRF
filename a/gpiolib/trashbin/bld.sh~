@@ -1,4 +1,0 @@
-swig -python gpiolib.i
-gcc -O2 -fPIC -c wiringPi.c
-gcc -O2 -fPIC -c wiringPi_wrap.c -I/usr/include/python2.7/
-gcc -shared wiringPi.o wiringPi_wrap.o -o _example.so
