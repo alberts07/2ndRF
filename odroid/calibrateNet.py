@@ -67,8 +67,7 @@ def main():
 
     N1 = readBinFile("Power")
 
-    print("Turn the noise source on and press enter")
-    #todo Brian update this
+    raw_input("Turn the noise source on and press enter")
 
     # Call SDR
     runGNU(top_block)
@@ -76,4 +75,5 @@ def main():
     N2 = readBinFile("Power")
     data = NoiseFig(N2,N1)
     filewrite(data)
+    
     return
