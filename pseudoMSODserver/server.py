@@ -5,8 +5,10 @@ import sys
 import time
 import json
 
+
+# Handle a local test
 if len(sys.argv):
-    if "local" in sys.argv:
+    if "--local" in sys.argv:
         A = {
                 'mobility': 'Stationary',
                 'messageType': 'Loc',
@@ -31,25 +33,26 @@ if len(sys.argv):
         # fp.close()
         exit()
 
+
+# Set up the server
 remoteIp = ''
 lclHostPort = 8999
 filename = ""
-quit = 0
+quit = false
 
-# Set up the socket
 socket_object = socket(AF_INET, SOCK_STREAM, 0)
 socket_object.bind((remoteIp,lclHostPort))
 socket_object.listen(1)
 print('Listening on port: ', lclHostPort)
 
-# Keep the socket running until 'cntl-C' is received
-while quit == 0:
+# Keep the socket running until 'ctl-C' or EXIT is received
+while quit == false:
     # Wait to accept a connection
     remote, address = socket_object.accept()
     print('Connected to ', address)
 
-    # Maintain the connction until told to quit
-    while quit == 0:
+    # Maintain the connction until told to quit, this loop will exit first
+    while quit == false:
         print "Waiting for request"
         buffer = ""
         buffer = remote.recv(1024)
@@ -93,9 +96,10 @@ while quit == 0:
                 fp.close()
         remote.send("Rx'd file")
 
-    remote.close()
-    fp.close()
-    socket_object.close()
+# Close the program down
+remote.close()
+fp.close()
+socket_object.close()
 
 
 
@@ -108,24 +112,4 @@ while quit == 0:
 
 
 
-        # elif not buffer:
-        #     remote.send("ERROR")
-        #     print "Did not receive anything."
-#  # = "decimal:" + str(d) + "\nfloat: " + str(x)
-#
-# print strng
-#
-# strng = "{
-#     "version": "1.0.16",
-#     "messageType": "Loc",
-#     "sensorId": "101010101",
-#     "sensorKey": 846859034,
-#     "time": 987654321,
-#     "mobility": "Stationary",
-#     "environment": "Outdoor",
-#     "latitude": 40.0,
-#     "longitude": -105.26,
-#     "altitude": 1655,
-#     "timeZone": "America_Denver"
-# }"
-# print strng
+   
