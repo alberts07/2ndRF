@@ -35,9 +35,9 @@ def runGNU(top_block_file):
 
 
 def NoiseFig(N2,N1):
-
     ENR=14.85
     N2lin = 10**(N2/10)
+    N2lin  = 2 ################### DIPSHIT REMOVE THIS
     N1lin = 10**(N1/10)
     YF=N2lin/N1lin
     NF= ENR-10*math.log(YF-1,10)
@@ -49,7 +49,7 @@ def NoiseFig(N2,N1):
 
 def filewrite(data):
     path = '~/sensor/data_archive/'
-    finalpath ='~/sensor/data_archive/NoiseFigure.xls'
+    finalpath ='/home/odroid/sensor/data_archive/NoiseFigure.xls'
 
     try:
         rb = open_workbook(finalpath, formatting_info=True)
@@ -67,12 +67,10 @@ def filewrite(data):
 
     rowbuff = ""
     ncols = r_sheet.ncols
-    
-    for col_idx in range(0, ncols):
-        cellobj = r_sheet.cell(row-1, col_idx)
-        print(cellobj+" ")
-        rowbuff = rowbuff + cellobj + ","
-        
+    for col_idx in range(ncols):
+        cellobj = r_sheet.cell_value(row-2, col_idx)
+        rowbuff = rowbuff + str(cellobj)+ ' '
+    print(rowbuff)    
     return rowbuff 
 
 def putToServer(cmd, buff):
@@ -101,7 +99,7 @@ def killClient():
     sock.close()
         
 
-def main():
+if __name__ == "__main__":
 
     print("The noise with the noise source off will now be calculated")
     #Call SDR
@@ -117,6 +115,7 @@ def main():
     # Ends in the script
     N2 = readBinFile("Power")
     data = NoiseFig(N2,N1)
+    print(data)
     row = filewrite(data)
 
 
@@ -129,4 +128,4 @@ def main():
 
     killClient()
     
-    return
+
