@@ -25,7 +25,7 @@ def readBinFile(file):
 
 def runGNU(top_block_file):
 
-    top_block_file.main()
+    top_block_file.main() # BRIAN PUT SCRIPT HERE
 
 def NoiseFig(N2,N1):
 
