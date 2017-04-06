@@ -25,7 +25,8 @@ def readBinFile(file):
 
 def runGNU(top_block_file):
 
-    top_block_file.main() # BRIAN PUT SCRIPT HERE
+    top_block_file.main() #Brian put script here
+
 
 def NoiseFig(N2,N1):
 
@@ -67,8 +68,7 @@ def main():
 
     N1 = readBinFile("Power")
 
-    print("Turn the noise source on and press enter")
-    #todo Brian update this
+    raw_input("Turn the noise source on and press enter")
 
     # Call SDR
     runGNU(top_block)
@@ -76,4 +76,5 @@ def main():
     N2 = readBinFile("Power")
     data = NoiseFig(N2,N1)
     filewrite(data)
+    
     return
