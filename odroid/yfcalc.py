@@ -1,18 +1,31 @@
 #Need to initialize power measurements with the noise diode off Look into whether order matters
 # Then turn the noise diode on and wait
-# Now initialize power measurements with noise diode on 
+# Now initialize power measurements with noise diode on
 # Divide the power of it on by the power of it off to get the Y FAct.
 # Calculate NF by taking ENR and subtracting 10log(Yfac-1)
-# ENR is  30db but will be calculated when parts in 
+# ENR is  30db but will be calculated when parts in
 import math
 from xlrd import open_workbook # http://pypi.python.org/pypi/xlrd
 from xlutils.copy import copy
 import GPS_runner
-from datetime import datetime
+import numpy
+import time
+import top_block
+
+#from datetime import datetime
 
 # todo update to actual file location when I can.
 # todo update ENR when we know it
 # todo place try except block
+
+def readBinFile(file):
+
+    data = numpy.fromfile("testN1")
+    return data.mean()
+
+def runGNU(function):
+
+    function.main()
 
 def NoiseFig(N2,N1):
 
@@ -29,7 +42,7 @@ def NoiseFig(N2,N1):
 
 def filewrite(data):
     path = '~/sensor/data_archive/'
-    finalpath ='NoiseFigure.xls'
+    finalpath ='~/sensor/data_archive/NoiseFigure.xls'
 
     try:
         rb = open_workbook(finalpath, formatting_info=True)
@@ -45,5 +58,12 @@ def filewrite(data):
     except IOError:
         print("The file name, %s, is not valid" %finalpath)
 
-data=NoiseFig(795.02,7.9499)
-filewrite(data)
+def calc(N2,N1):
+    data=NoiseFig(N2,N1)
+    filewrite(data)
+def main:
+    #Call SDR
+    runGNU(top_block)
+    time.sleep(1)
+
+
