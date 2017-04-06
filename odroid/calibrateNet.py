@@ -70,8 +70,8 @@ def filewrite(data):
     for col_idx in range(ncols):
         cellobj = r_sheet.cell_value(row-2, col_idx)
         rowbuff = rowbuff + str(cellobj)+ ' '
-    print(rowbuff)    
-    return rowbuff 
+    print(rowbuff)
+    return rowbuff
 
 def putToServer(cmd, buff):
     # First connect to the server, then send the message
@@ -80,9 +80,9 @@ def putToServer(cmd, buff):
 
     # Wait for the response from the server indicating it's ready
     while true:
-        buff = sock.recv(1024) 
+        buff = sock.recv(1024)
         if buff[0:5] == "READY":
-            
+
             print "sending" + sendStr
 
             # send the file
@@ -93,11 +93,11 @@ def putToServer(cmd, buff):
         else:
             print("Didn't understand response")
             sock.send("ERROR 2")
-     
+
 
 def killClient():
     sock.close()
-        
+
 
 if __name__ == "__main__":
 
@@ -122,10 +122,10 @@ if __name__ == "__main__":
     outFilename = "rowdata.txt"
     cmd = "PUT " + outFilename
     putToServer(cmd, row)
-    
+
     # Now wait to receive another response
     buff = sock.recv(1024)
 
     killClient()
-    
+
 
