@@ -17,7 +17,9 @@ from datetime import datetime
 def NoiseFig(N2,N1):
 
     ENR=14.85
-    YF=N2/N1
+    N2lin = 10**(N2/10)
+    N1lin = 10**(N1/10)
+    YF=N2lin/N1lin
     NF= ENR-10*math.log(YF-1,10)
     gpsinfo = None
     while gpsinfo == None:
