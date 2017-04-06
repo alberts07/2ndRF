@@ -4,6 +4,8 @@ import socket
 import locMessage
 
 
+
+
 def putFile(buff, ip, port):
     # First connect to the server, then send the message
     sock.connect((ip,port))
@@ -13,14 +15,13 @@ def putFile(buff, ip, port):
     while true:
         buff = sock.recv(1024) 
         if buff[0:5] == "READY":
-            sendStr = locMessage.locMessage()
+            sendStr = locMessage.locMessage()###################################3333
             # print "sending" + sendStr
             # send the file
             sock.send(sendStr)
             break
         elif buff[0:5] == "ERROR":
             print "There was an error on the server."
-
 
 def setupClient():
     # Tell the server to prepare to receive a file.
@@ -36,6 +37,6 @@ def setupClient():
     buff = sock.recv(1024)
     # print buff
 
-def killClient():
+def killClient(fp, sock):
     fp.close()
     sock.close()

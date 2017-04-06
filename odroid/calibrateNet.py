@@ -11,6 +11,12 @@ import GPS_runner
 import numpy
 import time
 import top_block
+import socket
+
+# Set up the socket for the client
+sock = socket.socket()
+hostIp = socket.gethostname()
+port = 8999 # This is just a random port chosen to try to avoid other used ones
 
 #from datetime import datetime
 
@@ -59,6 +65,42 @@ def filewrite(data):
     except IOError:
         print("The file name, %s, is not valid" %finalpath)
 
+    rowbuff = ""
+    ncols = r_sheet.ncols
+    
+    for col_idx in range(0, ncols):
+        cellobj = r_sheet.cell(row-1, col_idx)
+        print(cellobj+" ")
+        rowbuff = rowbuff + cellobj + ","
+        
+    return rowbuff 
+
+def putToServer(cmd, buff):
+    # First connect to the server, then send the message
+    sock.connect((hostIp, port))
+    sock.send(cmd)
+
+    # Wait for the response from the server indicating it's ready
+    while true:
+        buff = sock.recv(1024) 
+        if buff[0:5] == "READY":
+            
+            print "sending" + sendStr
+
+            # send the file
+            sock.send(buff)
+            break
+        elif buff[0:5] == "ERROR":
+            print "There was an error on the server."
+        else:
+            print("Didn't understand response")
+            sock.send("ERROR 2")
+     
+
+def killClient():
+    sock.close()
+        
+
 def main():
 
     print("The noise with the noise source off will now be calculated")
@@ -75,6 +117,16 @@ def main():
     # Ends in the script
     N2 = readBinFile("Power")
     data = NoiseFig(N2,N1)
-    filewrite(data)
+    row = filewrite(data)
+
+
+    outFilename = "rowdata.txt"
+    cmd = "PUT " + outFilename
+    putToServer(cmd, row)
+    
+    # Now wait to receive another response
+    buff = sock.recv(1024)
+
+    killClient()
     
     return
