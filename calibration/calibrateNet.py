@@ -15,7 +15,7 @@ import socket
 
 # Set up the socket for the client
 sock = socket.socket()
-hostIp = socket.gethostname()
+serverIP = socket.gethostname() # 192.168.1.100 # <--This ip will work over a swith to Brian's computer
 port = 8999 # This is just a random port chosen to try to avoid other used ones
 
 #from datetime import datetime
@@ -31,7 +31,7 @@ def readBinFile(file):
 
 def runGNU(top_block_file):
 
-    top_block_file.main() #Brian put script here
+    top_block_file.main()
 
 
 def NoiseFig(N2,N1):
@@ -75,7 +75,7 @@ def filewrite(data):
 
 def putToServer(cmd, buff):
     # First connect to the server, then send the message
-    sock.connect((hostIp, port))
+    sock.connect((serverIP, port))
     sock.send(cmd)
 
     # Wait for the response from the server indicating it's ready
