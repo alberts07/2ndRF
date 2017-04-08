@@ -38,7 +38,7 @@ if len(sys.argv):
 remoteIp = ''
 lclHostPort = 8999
 filename = ""
-quit = false
+quit = False
 
 socket_object = socket(AF_INET, SOCK_STREAM, 0)
 socket_object.bind((remoteIp,lclHostPort))
@@ -46,13 +46,13 @@ socket_object.listen(1)
 print('Listening on port: ', lclHostPort)
 
 # Keep the socket running until 'ctl-C' or EXIT is received
-while quit == false:
+while quit == False:
     # Wait to accept a connection
     remote, address = socket_object.accept()
     print('Connected to ', address)
 
     # Maintain the connction until told to quit, this loop will exit first
-    while quit == false:
+    while quit == False:
         print "Waiting for request"
         buffer = ""
         buffer = remote.recv(1024)
