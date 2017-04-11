@@ -15,7 +15,7 @@ import top_block
 import socket
 
 
-import wiringPi
+#import wiringPi
 
 #This is the website for the Physical Pin out for Odroid XU4
 #http://odroid.com/dokuwiki/doku.php?id=en:xu3_hardware_gpio
@@ -36,12 +36,12 @@ GPIO7  = 6  # Physcial pin 26
 GPIO8  = 22 # Physcial pin 19
 GPIO9  = 27 # Physical pin 15
 
-def initPins():	
-	wiringPi.wiringPiSetup();
-	wiringPi.pinMode (GPIO0, OUTPUT)
-	wiringPi.pinMode (GPIO1, OUTPUT)
-	wiringPi.pinMode (GPIO2, OUTPUT)
-	wiringPi.pinMode (GPIO3, OUTPUT)
+#def initPins():	
+#	wiringPi.wiringPiSetup();
+#	wiringPi.pinMode (GPIO0, OUTPUT)
+#	wiringPi.pinMode (GPIO1, OUTPUT)
+#	wiringPi.pinMode (GPIO2, OUTPUT)
+#	wiringPi.pinMode (GPIO3, OUTPUT)
 
 
 
