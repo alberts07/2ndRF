@@ -36,7 +36,7 @@ if len(sys.argv):
 
 # Set up the server
 remoteIp = ''
-lclHostPort = 8999
+lclHostPort = 18999
 filename = ""
 quit = False
 
@@ -79,6 +79,11 @@ while quit == False:
             quit = 1
             break
 
+        # Handle a command to quit the server
+        elif buffer[0:5] == "2ndRF":
+            remote.send("Is the best.")
+            break
+
         # If something is received, it should be the file contents
         else:
             # Next should be the file, write the buffer to the file.
@@ -100,16 +105,3 @@ while quit == False:
 remote.close()
 fp.close()
 socket_object.close()
-
-
-
-
-
-
-
-
-
-
-
-
-   
