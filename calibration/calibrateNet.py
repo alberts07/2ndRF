@@ -1,3 +1,4 @@
+#! /usr/bin/env python
 #Need to initialize power measurements with the noise diode off Look into whether order matters
 # Then turn the noise diode on and wait
 # Now initialize power measurements with noise diode on
@@ -13,10 +14,7 @@ import time
 import top_block
 import socket
 
-# Set up the socket for the client
-sock = socket.socket()
-serverIP = socket.gethostname() # 192.168.1.100 # <--This ip will work over a swith to Brian's computer
-port = 8999 # This is just a random port chosen to try to avoid other used ones
+
 
 #from datetime import datetime
 
@@ -79,11 +77,11 @@ def putToServer(cmd, buff):
     sock.send(cmd)
 
     # Wait for the response from the server indicating it's ready
-    while true:
+    while True:
         buff = sock.recv(1024)
         if buff[0:5] == "READY":
 
-            print "sending" + sendStr
+            print "sending" + cmd
 
             # send the file
             sock.send(buff)
@@ -98,6 +96,10 @@ def putToServer(cmd, buff):
 def killClient():
     sock.close()
 
+# Set up the socket for the client
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM,0)
+port = 18999 # This is just a random port chosen to try to avoid other used ones
+serverIP = '192.168.130.100'
 
 if __name__ == "__main__":
 
