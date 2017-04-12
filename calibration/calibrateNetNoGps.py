@@ -15,7 +15,7 @@ import top_block
 import socket
 
 
-#import wiringPi
+import wiringPi
 
 #This is the website for the Physical Pin out for Odroid XU4
 #http://odroid.com/dokuwiki/doku.php?id=en:xu3_hardware_gpio
@@ -36,14 +36,13 @@ GPIO7  = 6  # Physcial pin 26
 GPIO8  = 22 # Physcial pin 19
 GPIO9  = 27 # Physical pin 15
 
-#def initPins():	
-#	wiringPi.wiringPiSetup();
-#	wiringPi.pinMode (GPIO0, OUTPUT)
-#	wiringPi.pinMode (GPIO1, OUTPUT)
-#	wiringPi.pinMode (GPIO2, OUTPUT)
-#	wiringPi.pinMode (GPIO3, OUTPUT)
-
-
+def initPins():	
+	wiringPi.wiringPiSetup();
+	wiringPi.pinMode (GPIO0, OUTPUT)
+	wiringPi.pinMode (GPIO1, OUTPUT)
+	wiringPi.pinMode (GPIO2, OUTPUT)
+	wiringPi.pinMode (GPIO3, OUTPUT)
+        print("Pins initialized")
 
 
 #from datetime import datetime
@@ -104,26 +103,33 @@ def putToServer(cmd, buff):
     # First connect to the server, then send the message
     sock.connect((serverIP, port))
     sock.send(cmd)
+    #print("sent " + cmd)
 
     # Wait for the response from the server indicating it's ready
     while True:
-        buff = ""
-        buff = sock.recv(1024)
-        if buff[0:5] == "READY":
+        resp = ""
+        resp = sock.recv(1024)
+        print("RECIEVED " + resp)
+        if resp[0:5] == "READY":
 
-            print "sending " + cmd
-
+            # print("sending: " + buff)
+            
             # send the file
             sock.send(buff)
             break
-        elif buff[0:5] == "ERROR":
-            print "There was an error on the server."
+        
+        # Handle a server side error
+        elif resp[0:5] == "ERROR":
+            print("There was an error on the server.")
+            break
+        # Handle unknowns
         else:
             print("Didn't understand response")
             sock.send("ERROR 2")
 
 
 def killClient():
+    sock.send("QUIT")
     sock.close()
 
 # Set up the socket for the client
@@ -133,6 +139,11 @@ serverIP = '192.168.130.100'
 
 if __name__ == "__main__":
 
+    initPins()
+    wiringPi.digitalWrite(GPIO0, ON)
+    raw_input("Look at LED, then press ENTER")
+    wiringPi.digitalWrite(GPIO0, OFF)
+    
     print("The noise with the noise source off will now be calculated")
     #Call SDR
     runGNU(top_block)
@@ -141,7 +152,8 @@ if __name__ == "__main__":
     N1 = readBinFile("Power")
 
     raw_input("Turn the noise source on and press enter")
-
+    wiringPi.digitalWrite(GPIO0, ON)
+    
     # Call SDR
     runGNU(top_block)
     # Ends in the script
@@ -157,6 +169,8 @@ if __name__ == "__main__":
 
     # Now wait to receive another response
     buff = sock.recv(1024)
+    print("Received: " + buff)
+    wiringPi.digitalWrite(GPIO0, OFF)
 
     killClient()
 
