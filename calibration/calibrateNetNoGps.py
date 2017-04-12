@@ -151,8 +151,12 @@ if __name__ == "__main__":
 
     N1 = readBinFile("Power")
 
-    raw_input("Turn the noise source on and press enter")
+    # The system should turn the noise source on now
+    raw_input("Press ENTER to start the noise source and continue")
     wiringPi.digitalWrite(GPIO0, ON)
+    print("Noise source warming up")
+    time.sleep(5)
+    print("Continuing with the test")
     
     # Call SDR
     runGNU(top_block)

@@ -13,9 +13,8 @@ import numpy
 import time
 import top_block
 import socket
-
-
-mport wiringPi
+import time
+import wiringPi
 
 #This is the website for the Physical Pin out for Odroid XU4
 #http://odroid.com/dokuwiki/doku.php?id=en:xu3_hardware_gpio
@@ -35,15 +34,6 @@ GPIO6  = 4  # Physcial pin 18
 GPIO7  = 6  # Physcial pin 26
 GPIO8  = 22 # Physcial pin 19
 GPIO9  = 27 # Physical pin 15
-
-def initPins():	
-	wiringPi.wiringPiSetup();
-	wiringPi.pinMode (GPIO0, OUTPUT)
-	wiringPi.pinMode (GPIO1, OUTPUT)
-	wiringPi.pinMode (GPIO2, OUTPUT)
-	wiringPi.pinMode (GPIO3, OUTPUT)
-
-
 
 
 #from datetime import datetime
@@ -104,26 +94,42 @@ def putToServer(cmd, buff):
     sock.connect((serverIP, port))
     sock.send(cmd)
 
-    # Wait for the response from the server indicating it's ready
+    # Wait for the response from the server indicating it's ready to receive
     while True:
-        buff = ""
-        buff = sock.recv(1024)
-        if buff[0:5] == "READY":
+        resp = ""
+        resp = sock.recv(1024)
 
-            print "sending " + cmd
+        if resp[0:5] == "READY":
 
+            # print("sending: " + buff)
+            
             # send the file
             sock.send(buff)
             break
-        elif buff[0:5] == "ERROR":
-            print "There was an error on the server."
+        
+        # Handle a server side error
+        elif resp[0:5] == "ERROR":
+            print("There was an error on the server.")
+            break
+    
+        # Handle unknowns
         else:
             print("Didn't understand response")
             sock.send("ERROR 2")
 
 
 def killClient():
+    sock.send("QUIT")
     sock.close()
+
+
+def initPins():	
+	wiringPi.wiringPiSetup();
+	wiringPi.pinMode (GPIO0, OUTPUT)
+	# wiringPi.pinMode (GPIO1, OUTPUT)
+	# wiringPi.pinMode (GPIO2, OUTPUT)
+	# wiringPi.pinMode (GPIO3, OUTPUT)
+
 
 # Set up the socket for the client
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM,0)
@@ -132,6 +138,8 @@ serverIP = '192.168.130.100'
 
 if __name__ == "__main__":
 
+    initPins()
+
     print("The noise with the noise source off will now be calculated")
     #Call SDR
     runGNU(top_block)
@@ -139,24 +147,36 @@ if __name__ == "__main__":
 
     N1 = readBinFile("Power")
 
-    raw_input("Turn the noise source on and press enter")
-
+    # The system should turn the noise source on now
+    raw_input("Press ENTER to start the noise source and continue")
+    wiringPi.digitalWrite(GPIO0, ON)
+    print("Noise source warming up")
+    time.sleep(5)
+    
     # Call SDR
     runGNU(top_block)
     # Ends in the script
     N2 = readBinFile("Power")
-    data = NoiseFig(N2,N1)
-    #print(data)
-    row = filewrite(data)
+#    data = NoiseFig(N2,N1)
+#    row = filewrite(data)
 
 
+
+    row = "GPS DATA HERE"
+
+
+    
+    # setup the filename and send the data to the server
     outFilename = "rowdata.txt"
     cmd = "PUT " + outFilename
     putToServer(cmd, row)
 
     # Now wait to receive another response
     buff = sock.recv(1024)
+    print("Received: " + buff)
 
+    # Finally shut the program down
+    wiringPi.digitalWrite(GPIO0, OFF)
     killClient()
 
 
