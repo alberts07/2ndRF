@@ -41,7 +41,7 @@ NS     = 0
 GND    = 21
 
 
-def initPins():	
+def initPins():
 	wiringPi.wiringPiSetup();
 	wiringPi.pinMode (GPIO0, OUTPUT)
 	wiringPi.pinMode (GPIO1, OUTPUT)
@@ -60,13 +60,8 @@ def initPins():
 
 def readBinFile(file):
     f = scipy.fromfile(open(file), dtype = scipy.float32)
-    #data = numpy.fromfile(file)
-    #print(data)
-    #print(data.mean)
-    print(f)
-    f.mean()
-    print(f.mean())
-    return f.mean()
+
+    return f
 
 def runGNU(top_block_file):
 
@@ -74,13 +69,18 @@ def runGNU(top_block_file):
 
 
 def NoiseFig(N2,N1):
+
     ENR=30
+
     #N2lin = 10**(N2/10)
-  #  N2lin  = 2 ################################# DIPSHIT REMOVE THIS
     #N1lin = 10**(N1/10)
+
+
     YF=N2lin/N1lin
     NF= ENR-10*math.log(YF-1,10)
     print NF
+
+
     #gpsinfo = None
     #while gpsinfo == None:
     #    gpsinfo = GPS_runner.runner()
@@ -126,11 +126,11 @@ def putToServer(cmd, buff):
         if resp[0:5] == "READY":
 
             # print("sending: " + buff)
-            
+
             # send the file
             sock.send(buff)
             break
-        
+
         # Handle a server side error
         elif resp[0:5] == "ERROR":
             print("There was an error on the server.")
@@ -155,7 +155,7 @@ if __name__ == "__main__":
     initPins()
     wiringPi.digitalWrite(SWITCH, ON)
     raw_input("verify switch on")
-    
+
     print("The noise with the noise source off will now be calculated")
     #Call SDR
     runGNU(top_block)
@@ -165,10 +165,10 @@ if __name__ == "__main__":
 
     # The system should turn the noise source on now
     raw_input("Press ENTER to start the noise source and continue")
-       
+
     wiringPi.digitalWrite(NS, ON)
 
-    
+
     print("Noise source warming up")
     time.sleep(5)
     print("10 seconds left in warmup")
@@ -176,15 +176,18 @@ if __name__ == "__main__":
     print("5 seconds left in warmup")
     time.sleep(5)
     print("Continuing test")
-    
+
     # Call SDR
     runGNU(top_block)
     # Ends in the script
+
+
     N2 = readBinFile("Power")
     print("The difference is \n")
     print(N2-N1)
+    
     data = NoiseFig(N2,N1)
-    #print(data)
+    print(data)
     row = filewrite(data)
 
     outFilename = "data.csv"
@@ -194,11 +197,9 @@ if __name__ == "__main__":
     # Now wait to receive another response
     buff = sock.recv(1024)
     print("Received: " + buff)
-    
+
     wiringPi.digitalWrite(GPIO0, OFF)
     wiringPi.digitalWrite(GPIO1, OFF)
     wiringPi.digitalWrite(GPIO2, OFF)
 
     killClient()
-
-

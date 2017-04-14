@@ -3,6 +3,14 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Top Block
+<<<<<<< HEAD
+# Generated: Thu Apr 13 19:58:54 2017
+##################################################
+
+from gnuradio import blocks
+from gnuradio import eng_notation
+from gnuradio import gr
+=======
 # Generated: Thu Feb 11 17:48:24 2016
 ##################################################
 
@@ -22,13 +30,17 @@ from gnuradio import blocks
 from gnuradio import eng_notation
 from gnuradio import gr
 from gnuradio import qtgui
+>>>>>>> parent of bcfe838... fixing noisefig calc to match doug
 from gnuradio import uhd
 from gnuradio.eng_option import eng_option
 from gnuradio.filter import firdes
 from gnuradio.qtgui import Range, RangeWidget
 from optparse import OptionParser
+<<<<<<< HEAD
+=======
 import sip
 import sys
+>>>>>>> parent of bcfe838... fixing noisefig calc to match doug
 import time
 
 
@@ -60,16 +72,24 @@ class top_block(gr.top_block, Qt.QWidget):
         ##################################################
         # Variables
         ##################################################
+<<<<<<< HEAD
+        self.samp_rate = samp_rate = 1E6
+        self.gain = gain = 0
+        self.bandwidth = bandwidth = 1E6
+=======
         self.bandwidth = bandwidth = 5E6
         self.antenna = antenna = 3.625E9
         self.samp_rate = samp_rate = 2*bandwidth
         self.gain = gain = 30
         self.f0 = f0 = antenna
         self.FFT_Size = FFT_Size = 1024
+>>>>>>> parent of bcfe838... fixing noisefig calc to match doug
 
         ##################################################
         # Blocks
         ##################################################
+<<<<<<< HEAD
+=======
         self._bandwidth_range = Range(1E6, 50E6, 1, 5E6, 200)
         self._bandwidth_win = RangeWidget(self._bandwidth_range, self.set_bandwidth, "bandwidth", "counter_slider", float)
         self.top_grid_layout.addWidget(self._bandwidth_win, 0,1,1,1)
@@ -106,6 +126,7 @@ class top_block(gr.top_block, Qt.QWidget):
         self._FFT_Size_range = Range(512, 4096, 1, 1024, 200)
         self._FFT_Size_win = RangeWidget(self._FFT_Size_range, self.set_FFT_Size, "FFT_Size", "counter_slider", float)
         self.top_grid_layout.addWidget(self._FFT_Size_win, 2,1,1,1)
+>>>>>>> parent of bcfe838... fixing noisefig calc to match doug
         self.uhd_usrp_source_1 = uhd.usrp_source(
         	",".join(("", "")),
         	uhd.stream_args(
@@ -114,6 +135,20 @@ class top_block(gr.top_block, Qt.QWidget):
         	),
         )
         self.uhd_usrp_source_1.set_samp_rate(samp_rate)
+<<<<<<< HEAD
+        self.uhd_usrp_source_1.set_center_freq(3.625E9, 0)
+        self.uhd_usrp_source_1.set_gain(gain, 0)
+        self.uhd_usrp_source_1.set_antenna("TX/RX", 0)
+        self.uhd_usrp_source_1.set_bandwidth(bandwidth, 0)
+        self.blocks_skiphead_0 = blocks.skiphead(gr.sizeof_gr_complex*1, 20)
+        self.blocks_nlog10_ff_0 = blocks.nlog10_ff(10, 1, 0)
+        self.blocks_multiply_xx_0 = blocks.multiply_vcc(1)
+        self.blocks_head_0 = blocks.head(gr.sizeof_gr_complex*1, 100)
+        self.blocks_file_sink_1 = blocks.file_sink(gr.sizeof_float*1, "/home/odroid/Documents/2ndRF/calibration/Power", False)
+        self.blocks_file_sink_1.set_unbuffered(False)
+        self.blocks_conjugate_cc_0 = blocks.conjugate_cc()
+        self.blocks_complex_to_real_0 = blocks.complex_to_real(1)
+=======
         self.uhd_usrp_source_1.set_center_freq(f0, 0)
         self.uhd_usrp_source_1.set_gain(gain, 0)
         self.uhd_usrp_source_1.set_antenna("TX/RX", 0)
@@ -191,10 +226,21 @@ class top_block(gr.top_block, Qt.QWidget):
         self._qtgui_freq_sink_x_0_0_win = sip.wrapinstance(self.qtgui_freq_sink_x_0_0.pyqwidget(), Qt.QWidget)
         self.top_grid_layout.addWidget(self._qtgui_freq_sink_x_0_0_win, 4,1,1,1)
         self.blocks_complex_to_mag_squared_0 = blocks.complex_to_mag_squared(1)
+>>>>>>> parent of bcfe838... fixing noisefig calc to match doug
 
         ##################################################
         # Connections
         ##################################################
+<<<<<<< HEAD
+        self.connect((self.blocks_complex_to_real_0, 0), (self.blocks_nlog10_ff_0, 0))    
+        self.connect((self.blocks_conjugate_cc_0, 0), (self.blocks_multiply_xx_0, 1))    
+        self.connect((self.blocks_head_0, 0), (self.blocks_conjugate_cc_0, 0))    
+        self.connect((self.blocks_head_0, 0), (self.blocks_multiply_xx_0, 0))    
+        self.connect((self.blocks_multiply_xx_0, 0), (self.blocks_complex_to_real_0, 0))    
+        self.connect((self.blocks_nlog10_ff_0, 0), (self.blocks_file_sink_1, 0))    
+        self.connect((self.blocks_skiphead_0, 0), (self.blocks_head_0, 0))    
+        self.connect((self.uhd_usrp_source_1, 0), (self.blocks_skiphead_0, 0))    
+=======
         self.connect((self.blocks_complex_to_mag_squared_0, 0), (self.qtgui_freq_sink_x_0_0, 0))    
         self.connect((self.blocks_complex_to_mag_squared_0, 0), (self.qtgui_number_sink_0, 0))    
         self.connect((self.uhd_usrp_source_1, 0), (self.blocks_complex_to_mag_squared_0, 0))    
@@ -221,6 +267,7 @@ class top_block(gr.top_block, Qt.QWidget):
         self.antenna = antenna
         self._antenna_callback(self.antenna)
         self.set_f0(self.antenna)
+>>>>>>> parent of bcfe838... fixing noisefig calc to match doug
 
     def get_samp_rate(self):
         return self.samp_rate
@@ -237,6 +284,14 @@ class top_block(gr.top_block, Qt.QWidget):
         self.uhd_usrp_source_1.set_gain(self.gain, 0)
         	
 
+<<<<<<< HEAD
+    def get_bandwidth(self):
+        return self.bandwidth
+
+    def set_bandwidth(self, bandwidth):
+        self.bandwidth = bandwidth
+        self.uhd_usrp_source_1.set_bandwidth(self.bandwidth, 0)
+=======
     def get_f0(self):
         return self.f0
 
@@ -249,6 +304,7 @@ class top_block(gr.top_block, Qt.QWidget):
 
     def set_FFT_Size(self, FFT_Size):
         self.FFT_Size = FFT_Size
+>>>>>>> parent of bcfe838... fixing noisefig calc to match doug
 
 
 def main(top_block_cls=top_block, options=None):
