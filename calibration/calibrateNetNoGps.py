@@ -70,16 +70,39 @@ def runGNU(top_block_file):
 
 def NoiseFig(N2,N1):
 
-    ENR=30
+    ENR = 30
+    
+    # Testing Doug's stuff
+    #Z = 50
+    #N2_W = numpy.square(numpy.absolute(N2)) / Z 
+    #N1_W = numpy.square(numpy.absolute(N1)) / Z
+    #N2mean_W = numpy.mean(N2_W)
+    #N1mean_W = numpy.mean(N1_W)
+    #N2mean_dBW = 10 * numpy.log10(N2mean_W)
+    #N1mean_dBW = 10 * numpy.log10(N1mean_W)
+    #ENR_W = numpy.power(10, ENR / 10.0)
+    #YF = N2mean_W/N1mean_W
+    #NF = ENR_W / (YF-1)
+    #NF = 10 * numpy.log10(NF)
+      
+    #My code starts
+    
+    #N2 = N2**2 / 50
+    #print(N2)
+    N2 = N2.mean()
+    #N2 = 10 * numpy.log10(N2)
+
+    #N1 = N1**2 / 50
+    #print(N1)
+    N1 = N1.mean()
+    #N1 = 10 * numpy.log10(N1)
 
     #N2lin = 10**(N2/10)
     #N1lin = 10**(N1/10)
-
-
-    YF=N2lin/N1lin
-    NF= ENR-10*math.log(YF-1,10)
-    print NF
-
+    YF=N2/N1
+    print('The YFcalc is %f' %YF)
+    NF= ENR-10*numpy.log10(YF-1)
+    print('The noise figure is %f'%NF)
 
     #gpsinfo = None
     #while gpsinfo == None:
@@ -156,19 +179,11 @@ if __name__ == "__main__":
     wiringPi.digitalWrite(SWITCH, ON)
     raw_input("verify switch on")
 
-    print("The noise with the noise source off will now be calculated")
-    #Call SDR
-    runGNU(top_block)
-    #Ends in the script
-
-    N1 = readBinFile("Power")
-
-    # The system should turn the noise source on now
+    
+    print("The noise with the noise source on will now be calculated")
     raw_input("Press ENTER to start the noise source and continue")
 
     wiringPi.digitalWrite(NS, ON)
-
-
     print("Noise source warming up")
     time.sleep(5)
     print("10 seconds left in warmup")
@@ -177,15 +192,30 @@ if __name__ == "__main__":
     time.sleep(5)
     print("Continuing test")
 
+    runGNU(top_block)
+    #Ends in the script
+
+    time.sleep(5)
+    N2 = readBinFile("Power")
+    print(N2)
+    # The system should turn the noise source on now
+    raw_input("Press ENTER to turn off the noise source and continue")
+       
+    wiringPi.digitalWrite(NS, OFF)
+
+    print("Noise source turning off")
+    time.sleep(5)
+    print("Continuing test")
+    
     # Call SDR
     runGNU(top_block)
     # Ends in the script
+    time.sleep(5)
+    N1 = readBinFile("Power")
+    print(N1)
 
 
-    N2 = readBinFile("Power")
-    print("The difference is \n")
-    print(N2-N1)
-    
+
     data = NoiseFig(N2,N1)
     print(data)
     row = filewrite(data)
