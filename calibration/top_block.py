@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Top Block
-# Generated: Fri Apr 14 04:40:28 2017
+# Generated: Fri Apr 14 06:18:24 2017
 ##################################################
 
 from gnuradio import blocks
@@ -25,9 +25,9 @@ class top_block(gr.top_block):
         # Variables
         ##################################################
         self.samp_rate = samp_rate = 1E6
-        self.gain = gain = 30
+        self.gain = gain = 0
         self.f0 = f0 = 3.625E9
-        self.bandwidth = bandwidth = 1E6
+        self.bandwidth = bandwidth = 5
 
         ##################################################
         # Blocks

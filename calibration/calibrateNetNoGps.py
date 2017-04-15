@@ -70,8 +70,10 @@ def runGNU(top_block_file):
 
 def NoiseFig(N2,N1):
 
-    ENR = 30
+    #ENR = 30
     
+    ENR = 14.85
+
     # Testing Doug's stuff
     #Z = 50
     #N2_W = numpy.square(numpy.absolute(N2)) / Z 
@@ -97,9 +99,9 @@ def NoiseFig(N2,N1):
     N1 = N1.mean()
     #N1 = 10 * numpy.log10(N1)
 
-    #N2lin = 10**(N2/10)
-    #N1lin = 10**(N1/10)
-    YF=N2/N1
+    N2lin = 10**(N2/10)
+    N1lin = 10**(N1/10)
+    YF=N2lin/N1lin
     print('The YFcalc is %f' %YF)
     NF= ENR-10*numpy.log10(YF-1)
     print('The noise figure is %f'%NF)
