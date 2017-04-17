@@ -240,6 +240,8 @@ if __name__ == "__main__":
     print(data)
     row = filewrite(data)
 
+    #row = sendMessage(rowdata):
+
     outFilename = "data.csv"
     cmd = "PUT " + outFilename
     putToServer(cmd, row)
