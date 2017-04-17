@@ -14,14 +14,14 @@ import time
 import top_block
 import socket
 import scipy
-
 import wiringPi
 import struct
+#from datetime import datetime
+
 #This is the website for the Physical Pin out for Odroid XU4
 #http://odroid.com/dokuwiki/doku.php?id=en:xu3_hardware_gpio
 
-#Define 4 GPIO pins
-
+#Define GPIO pins
 ON     = 1
 OFF    = 0
 OUTPUT = 1
@@ -52,7 +52,6 @@ def initPins():
         wiringPi.digitalWrite(GPIO2, OFF)
 
 
-#from datetime import datetime
 
 # todo update to actual file location when I can.
 # todo update ENR when we know it
@@ -71,12 +70,12 @@ def runGNU(top_block_file):
 def NoiseFig(N2,N1):
 
     #ENR = 30
-    
+
     ENR = 14.85
 
     # Testing Doug's stuff
     #Z = 50
-    #N2_W = numpy.square(numpy.absolute(N2)) / Z 
+    #N2_W = numpy.square(numpy.absolute(N2)) / Z
     #N1_W = numpy.square(numpy.absolute(N1)) / Z
     #N2mean_W = numpy.mean(N2_W)
     #N1mean_W = numpy.mean(N1_W)
@@ -86,9 +85,9 @@ def NoiseFig(N2,N1):
     #YF = N2mean_W/N1mean_W
     #NF = ENR_W / (YF-1)
     #NF = 10 * numpy.log10(NF)
-      
+
     #My code starts
-    
+
     #N2 = N2**2 / 50
     #print(N2)
     N2 = N2.mean()
@@ -170,9 +169,30 @@ def killClient():
     sock.send("QUIT")
     sock.close()
 
-# Set up the socket for the client
+def sendMessage(rowdata):
+	# strarray=runner()
+
+	A={
+	    "version": "1.0.16",
+	    "messageType": "Loc",
+	    "sensorId": "101010101",
+	    "sensorKey": 846859034,
+	    "time": time.time(),
+	    "mobility": "Stationary",
+	    "environment": "Outdoor",
+	    "latitude": float(rowdata[1]),
+	    "longitude": float(rowdata[2]),
+	    "altitude": float(rowdata[3]),
+	    "timeZone": "America_Denver"
+	}
+	return A
+
+
+
+
+# Set up the socket for the client, these are set Globally
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM,0)
-port = 18999 # This is just a random port chosen to try to avoid other used ones
+port = 18999 # This is just a random port chosen to try to avoid a used one
 serverIP = '192.168.130.100'
 
 if __name__ == "__main__":
@@ -181,7 +201,7 @@ if __name__ == "__main__":
     wiringPi.digitalWrite(SWITCH, ON)
     raw_input("verify switch on")
 
-    
+
     print("The noise with the noise source on will now be calculated")
     raw_input("Press ENTER to start the noise source and continue")
 
@@ -202,21 +222,19 @@ if __name__ == "__main__":
     print(N2)
     # The system should turn the noise source on now
     raw_input("Press ENTER to turn off the noise source and continue")
-       
+
     wiringPi.digitalWrite(NS, OFF)
 
     print("Noise source turning off")
     time.sleep(5)
     print("Continuing test")
-    
+
     # Call SDR
     runGNU(top_block)
     # Ends in the script
     time.sleep(5)
     N1 = readBinFile("Power")
     print(N1)
-
-
 
     data = NoiseFig(N2,N1)
     print(data)

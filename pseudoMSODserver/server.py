@@ -45,6 +45,9 @@ socket_object.bind((remoteIp,lclHostPort))
 socket_object.listen(1)
 print('Listening on port: ', lclHostPort)
 
+
+filename = ""
+
 # Keep the socket running until 'ctl-C' or EXIT is received
 while quit == False:
     # Wait to accept a connection
@@ -60,7 +63,7 @@ while quit == False:
         # If the PUT command is received, prepare to receive the file name passed
         if buffer[0:3] == "PUT":
             if len(buffer) != 0:
-                print "CMD: " + buffer[0:3]     # Prints the command
+                print "CMD: " + buffer[0:3]       # Prints the command
                 print "Filename: " + buffer[4:]   # Prints the filename
             filename = buffer[4:]
 
@@ -92,7 +95,7 @@ while quit == False:
                 remote.send("ERROR Received empty buffer")
             else:
                 # Get the time from the buffer, make a filename from it
-                print "The time was: " + A['time']
+                # print "The time was: " + A['time']
                 # seconds = A['time']/1000
                 # name = time.strftime('%Y%m%d_%H%M', A[time], ms)
                 fp = open(filename, "wb")
