@@ -36,7 +36,7 @@ if len(sys.argv):
 
 # Set up the server
 remoteIp = ''
-lclHostPort = 8999
+lclHostPort = 18999
 filename = ""
 quit = False
 
@@ -44,6 +44,9 @@ socket_object = socket(AF_INET, SOCK_STREAM, 0)
 socket_object.bind((remoteIp,lclHostPort))
 socket_object.listen(1)
 print('Listening on port: ', lclHostPort)
+
+
+filename = ""
 
 # Keep the socket running until 'ctl-C' or EXIT is received
 while quit == False:
@@ -60,7 +63,7 @@ while quit == False:
         # If the PUT command is received, prepare to receive the file name passed
         if buffer[0:3] == "PUT":
             if len(buffer) != 0:
-                print "CMD: " + buffer[0:3]     # Prints the command
+                print "CMD: " + buffer[0:3]       # Prints the command
                 print "Filename: " + buffer[4:]   # Prints the filename
             filename = buffer[4:]
 
@@ -79,6 +82,11 @@ while quit == False:
             quit = 1
             break
 
+        # Handle a command to quit the server
+        elif buffer[0:5] == "2ndRF":
+            remote.send("Is the best.")
+            break
+
         # If something is received, it should be the file contents
         else:
             # Next should be the file, write the buffer to the file.
@@ -87,7 +95,7 @@ while quit == False:
                 remote.send("ERROR Received empty buffer")
             else:
                 # Get the time from the buffer, make a filename from it
-                print "The time was: " + A['time']
+                # print "The time was: " + A['time']
                 # seconds = A['time']/1000
                 # name = time.strftime('%Y%m%d_%H%M', A[time], ms)
                 fp = open(filename, "wb")
@@ -100,16 +108,3 @@ while quit == False:
 remote.close()
 fp.close()
 socket_object.close()
-
-
-
-
-
-
-
-
-
-
-
-
-   
