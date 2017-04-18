@@ -152,7 +152,7 @@
     </param>
     <param>
       <key>start</key>
-      <value>2E3</value>
+      <value>1.5E3</value>
     </param>
     <param>
       <key>step</key>
@@ -239,15 +239,15 @@
     </param>
     <param>
       <key>option1</key>
-      <value>3.5E9</value>
+      <value>3.45E9</value>
     </param>
     <param>
       <key>option2</key>
-      <value>3.75E9</value>
+      <value>3.80E9</value>
     </param>
     <param>
       <key>option3</key>
-      <value>3.47E9</value>
+      <value>3.49E9</value>
     </param>
     <param>
       <key>option4</key>
@@ -449,7 +449,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>102</value>
+      <value>103</value>
     </param>
     <param>
       <key>_enabled</key>
