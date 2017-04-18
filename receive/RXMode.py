@@ -5,18 +5,22 @@
 #The website for the Physical Pin out for Odroid XU4 is
 #http://odroid.com/dokuwiki/doku.php?id=en:xu3_hardware_gpio
 
-
 import math
-from xlrd import open_workbook # http://pypi.python.org/pypi/xlrd
-from xlutils.copy import copy
 import numpy
 import time
 import top_block
 import socket
 import scipy
+
+import struct
 import gpslib.GPS_runner as GPS_runner
 import gpiolib.wiringPi as wiringPi
-import struct
+
+import gzip
+import shutil
+
+from xlrd import open_workbook # http://pypi.python.org/pypi/xlrd
+from xlutils.copy import copy
 
 
 #Define GPIO pins
@@ -111,61 +115,26 @@ def killClient():
         sock.send("QUIT")
         sock.close()
 
-def buildMessage(rowdata, data):
-        
-	loc={
-	        "version": "1.0.16",
-	        "messageType": "Loc",
-	        "sensorId": "101010101",
-	        "sensorKey": 846859034,
-	        "time": time.time(),
-	        "mobility": "Stationary",
-	        "environment": "Outdoor",
-	        "latitude": float(rowdata[1]),
-	        "longitude": float(rowdata[2]),
-	        "altitude": float(rowdata[3]),
-	        "timeZone": "America_Denver"
-	}
-    datastr={
-			"version": "1.0.16",
-	        "messageType": "Data",
-	        "sensorId": "101010101",
-	        "sensorKey": 846859034,
-	        "time": time.time(),
-	        "mobility": "Stationary",
-	        "environment": "Outdoor",
-	        "latitude": float(rowdata[1]),
-	        "longitude": float(rowdata[2]),
-	        "altitude": float(rowdata[3]),
-	        "timeZone": "UTC",
-			"data": data
-}           
-    return loc,datastr
-
-
-
 
 if __name__ == "__main__":
-	
+
 
 	initPins()
 	initFile()
-	
-	
+
+    gpsinfo = GPS_runner.runner()  # gpsinfo = [str(MSODobject.timestamp), MSODobject.lat, MSODobject.lon, MSODobject.altitude]
+    gpsinfo.append("\n\r")
+
+    data = numpy.fromfile("RXfile")
+    data = gpsinfo.append(data)
+
+    outFilename = "data.csv.gz"
+    with gzip.open(outFilename, 'wb') as f:
+        f.write(data)
 
 
-
-
-
-
-
-
-
-
-
-	outFilename = "data.csv"
     cmd = "PUT " + outFilename
-    putToServer(cmd, row)
+    putToServer(cmd, data)
 
     # Now wait to receive another response
     buff = sock.recv(1024)
@@ -174,15 +143,3 @@ if __name__ == "__main__":
     wiringPi.digitalWrite(GPIO0, OFF)
     wiringPi.digitalWrite(GPIO1, OFF)
     wiringPi.digitalWrite(GPIO2, OFF)
-
-
-
-
-
-
-
-
-
-
-
-

@@ -58,7 +58,7 @@ while quit == False:
     while quit == False:
         print "Waiting for request"
         buffer = ""
-        buffer = remote.recv(1024)
+        buffer = remote.recv(16384)
 
         # If the PUT command is received, prepare to receive the file name passed
         if buffer[0:3] == "PUT":
