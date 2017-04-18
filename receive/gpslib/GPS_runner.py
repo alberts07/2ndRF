@@ -3,7 +3,7 @@ def runner():
 	MSODobject=None
 	while (MSODobject is None):
 		# MSODobject=subroutine("msod")
-        strarray = subroutine("csv")
+		strarray = subroutine("csv")
 	#print(str(MSODobject.timestamp))
 	# strarray= [str(MSODobject.timestamp), MSODobject.lat, MSODobject.lon, MSODobject.altitude]
 	return strarray

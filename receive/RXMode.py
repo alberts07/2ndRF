@@ -51,7 +51,7 @@ serverIP = '192.168.130.100'
 
 # Set up the GPIO pins, and make sure they are all set low initially
 def initPins():
-	wiringPi.wiringPiSetup();
+	wiringPi.wiringPiSetup()
 	wiringPi.pinMode (GPIO0, OUTPUT)
 	wiringPi.pinMode (GPIO1, OUTPUT)
 	wiringPi.pinMode (GPIO2, OUTPUT)
@@ -60,30 +60,6 @@ def initPins():
     wiringPi.digitalWrite(SWITCH, OFF)
     wiringPi.digitalWrite(GPIO2, OFF)
 
-
-# def fileInit():
-#     with open('RXDataToSend.csv', 'w') as csvfile:
-#         csvfile.write("UTC,Lat,Long,Alt,FFT")
-#         csvfile.write("\n")
-#     csvfile.close()
-#
-# def filewrite(data):
-#     path = '~/Documents/test'
-#     finalpath ='/home/user/Documents/test/RXDataToSend.csv'
-#     row_count = sum(1 for row in csv.reader( open('RXDataToSend.csv') ) )
-#     print row_count
-#     if row_count < 3:
-#         fd = open('RXDataToSend.csv','a')
-#         fd.write(data)
-#         fd.write("\n")
-#         fd.close()
-#     else:
-# 		os.rename('RXDataToSend.csv','04-18-17.csv')
-# 		fileInit()
-# 		fd = open('RXDataToSend.csv','a')
-# 		fd.write(data)
-# 		fd.write("\n")
-# 		fd.close()
 
 def putToServer(cmd, buff):
     # First connect to the server, then send the message
@@ -118,19 +94,19 @@ def killClient():
 
 if __name__ == "__main__":
 
+    # gpsinfo = GPS_runner.runner()  # gpsinfo = [str(MSODobject.timestamp), MSODobject.lat, MSODobject.lon, MSODobject.altitude]
 
-	initPins()
-	initFile()
-
-    gpsinfo = GPS_runner.runner()  # gpsinfo = [str(MSODobject.timestamp), MSODobject.lat, MSODobject.lon, MSODobject.altitude]
-    gpsinfo.append("\n\r")
-
+    gpsinfo = "GPS data goes right here"
+    gpsinfo = gpsinfo + "\n\r"
     data = numpy.fromfile("RXfile")
-    data = gpsinfo.append(data)
+    outFilename = "data.csv"
 
-    outFilename = "data.csv.gz"
-    with gzip.open(outFilename, 'wb') as f:
-        f.write(data)
+
+    with open(outFilename, 'wb') as csvfile:
+        csvfile.write(gpsinfo)
+        csvfile.write("\n")
+        csvfile.write(data)
+
 
     cmd = "PUT " + outFilename
     putToServer(cmd, data)

@@ -154,6 +154,7 @@ def subroutine(choice):
 
 							a = csv.writer(fp, delimiter=',')
 							a.writerow(cols)
+
                             return cols
 
 	else:
