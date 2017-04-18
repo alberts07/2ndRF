@@ -41,7 +41,7 @@ SWITCH = 15
 NS     = 0
 GND    = 21
 
-# Set up the GPIO pins, and make sure they are all turned off
+# Set up the GPIO pins, and make sure they are all set low initially
 def initPins():
 	wiringPi.wiringPiSetup();
 	wiringPi.pinMode (GPIO0, OUTPUT)
@@ -139,7 +139,7 @@ def NoiseFig(N2,N1):
 
 def fileInit():
     with open('NoiseFigure.csv', 'w') as csvfile:
-        csvfile.write("UTC Time, Lat,Long,Alt,NF")
+        csvfile.write("UTC,Lat,Long,Alt,NF")
         csvfile.write("\n")
     csvfile.close()
 
@@ -208,7 +208,7 @@ def buildMessage(rowdata, stuff):
 	        "timeZone": "America_Denver"
 	}
         
-        NF = {
+    NF = {
 	        "version": "1.0.16",
 	        "messageType": "NF",
 	        "sensorId": "101010101",
@@ -220,10 +220,10 @@ def buildMessage(rowdata, stuff):
 	        "longitude": float(rowdata[2]),
 	        "altitude": float(rowdata[3]),
 	        "timeZone": "UTC",
-                "data": stuff
+            "NF": stuff
 	}
         
-        return loc,NF
+    return loc,NF
 
 
 
