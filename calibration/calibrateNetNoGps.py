@@ -161,15 +161,10 @@ def filewrite(data):
 		fd.write("\n")
 		fd.close()
 
-
-
-
-
 def putToServer(cmd, buff):
     # First connect to the server, then send the message
     sock.connect((serverIP, port))
     sock.send(cmd)
-    #print("sent " + cmd)
 
     # Wait for the response from the server indicating it's ready
     while True:
@@ -177,8 +172,6 @@ def putToServer(cmd, buff):
         resp = sock.recv(1024)
         print("RECIEVED " + resp)
         if resp[0:5] == "READY":
-
-            # print("sending: " + buff)
 
             # send the file
             sock.send(buff)
@@ -192,45 +185,45 @@ def putToServer(cmd, buff):
         else:
             print("Didn't understand response")
             sock.send("ERROR 2")
-
+        killClient()
 
 def killClient():
-    sock.send("QUIT")
-    sock.close()
+        sock.send("QUIT")
+        sock.close()
 
 def buildMessage(rowdata, stuff):
-	# strarray=runner()
-
+        # strarray=runner()
+        
 	loc={
-	    "version": "1.0.16",
-	    "messageType": "Loc",
-	    "sensorId": "101010101",
-	    "sensorKey": 846859034,
-	    "time": time.time(),
-	    "mobility": "Stationary",
-	    "environment": "Outdoor",
-	    "latitude": float(rowdata[1]),
-	    "longitude": float(rowdata[2]),
-	    "altitude": float(rowdata[3]),
-	    "timeZone": "America_Denver"
-	}
-
-        NF = {
-	    "version": "1.0.16",
-	    "messageType": "NF",
-	    "sensorId": "101010101",
-	    "sensorKey": 846859034,
-	    "time": time.time(),
-	    "mobility": "Stationary",
-	    "environment": "Outdoor",
-	    "latitude": float(rowdata[1]),
-	    "longitude": float(rowdata[2]),
-	    "altitude": float(rowdata[3]),
-	    "timeZone": "UTC",
-            "datums": stuff
+	        "version": "1.0.16",
+	        "messageType": "Loc",
+	        "sensorId": "101010101",
+	        "sensorKey": 846859034,
+	        "time": time.time(),
+	        "mobility": "Stationary",
+	        "environment": "Outdoor",
+	        "latitude": float(rowdata[1]),
+	        "longitude": float(rowdata[2]),
+	        "altitude": float(rowdata[3]),
+	        "timeZone": "America_Denver"
 	}
         
-	return loc,NF
+        NF = {
+	        "version": "1.0.16",
+	        "messageType": "NF",
+	        "sensorId": "101010101",
+	        "sensorKey": 846859034,
+	        "time": time.time(),
+	        "mobility": "Stationary",
+	        "environment": "Outdoor",
+	        "latitude": float(rowdata[1]),
+	        "longitude": float(rowdata[2]),
+	        "altitude": float(rowdata[3]),
+	        "timeZone": "UTC",
+                "data": stuff
+	}
+        
+        return loc,NF
 
 
 
@@ -299,4 +292,4 @@ if __name__ == "__main__":
     wiringPi.digitalWrite(GPIO1, OFF)
     wiringPi.digitalWrite(GPIO2, OFF)
 
-    killClient()
+
