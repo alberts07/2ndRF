@@ -137,8 +137,9 @@ def subroutine(choice):
 
 		print("Press Ctl + c to quit collecting information\n")
 		with open('Timestamps.csv', 'wb') as fp:			#Change Timestamps to whatevert you want to call your CSV file
-
-			while(1):
+                        cols = None
+			#while(1): #COMMENTED OUT BY BRIAN
+                        while(cols is None):
 
 
 # Check to see if the user attempted to terminate the program
@@ -154,8 +155,8 @@ def subroutine(choice):
 
 							a = csv.writer(fp, delimiter=',')
 							a.writerow(cols)
-
-                            return cols
+                                                        print("cols: " + str(cols))
+                                                        return cols
 
 	else:
 		print("The correct argument was not given. Please enter cmd|excel|text|csv as an input\n")

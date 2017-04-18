@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Top Block
-# Generated: Sun Apr 16 17:40:15 2017
+# Generated: Tue Apr 18 14:39:59 2017
 ##################################################
 
 if __name__ == '__main__':
@@ -17,6 +17,7 @@ if __name__ == '__main__':
             print "Warning: failed to XInitThreads()"
 
 from PyQt4 import Qt
+from PyQt4.QtCore import QObject, pyqtSlot
 from gnuradio import analog
 from gnuradio import blocks
 from gnuradio import eng_notation
@@ -62,7 +63,7 @@ class top_block(gr.top_block, Qt.QWidget):
         # Variables
         ##################################################
         self.samp_rate = samp_rate = 60E3
-        self.gain = gain = 0
+        self.gain = gain = 15
         self.fc_fine = fc_fine = 0
         self.fc = fc = 3.625E9
         self.fL = fL = 3E3
@@ -71,18 +72,27 @@ class top_block(gr.top_block, Qt.QWidget):
         ##################################################
         # Blocks
         ##################################################
-        self._samp_rate_range = Range(20E3, 1E6, 1E3, 60E3, 200)
-        self._samp_rate_win = RangeWidget(self._samp_rate_range, self.set_samp_rate, "samp_rate", "counter_slider", float)
-        self.top_grid_layout.addWidget(self._samp_rate_win, 4,1,1,1)
-        self._gain_range = Range(0, 30, 1, 0, 200)
+        self._gain_range = Range(0, 30, 1, 15, 200)
         self._gain_win = RangeWidget(self._gain_range, self.set_gain, "gain", "counter_slider", float)
-        self.top_grid_layout.addWidget(self._gain_win, 0,0,1,1)
+        self.top_grid_layout.addWidget(self._gain_win, 0,1,1,1)
         self._fc_fine_range = Range(-1E4, 1E4, 1, 0, 200)
         self._fc_fine_win = RangeWidget(self._fc_fine_range, self.set_fc_fine, "fc_fine", "counter_slider", float)
-        self.top_grid_layout.addWidget(self._fc_fine_win, 6,1,1,1)
+        self.top_grid_layout.addWidget(self._fc_fine_win, 1,1,1,1)
+        self._fc_options = (3.625E9, 3.45E9, 3.80E9, 3.49E9, )
+        self._fc_labels = ("In Band", "Out of band, lower", "Out of band, higher", "Way out", )
+        self._fc_tool_bar = Qt.QToolBar(self)
+        self._fc_tool_bar.addWidget(Qt.QLabel("fc"+": "))
+        self._fc_combo_box = Qt.QComboBox()
+        self._fc_tool_bar.addWidget(self._fc_combo_box)
+        for label in self._fc_labels: self._fc_combo_box.addItem(label)
+        self._fc_callback = lambda i: Qt.QMetaObject.invokeMethod(self._fc_combo_box, "setCurrentIndex", Qt.Q_ARG("int", self._fc_options.index(i)))
+        self._fc_callback(self.fc)
+        self._fc_combo_box.currentIndexChanged.connect(
+        	lambda i: self.set_fc(self._fc_options[i]))
+        self.top_grid_layout.addWidget(self._fc_tool_bar, 0,0,1,1)
         self._fL_range = Range(1.5E3, samp_rate/2, 10E2, 3E3, 200)
         self._fL_win = RangeWidget(self._fL_range, self.set_fL, "fL", "counter_slider", float)
-        self.top_grid_layout.addWidget(self._fL_win, 4,0,1,1)
+        self.top_grid_layout.addWidget(self._fL_win, 1,0,1,1)
         self.uhd_usrp_source_0 = uhd.usrp_source(
         	",".join(("", "")),
         	uhd.stream_args(
@@ -142,48 +152,7 @@ class top_block(gr.top_block, Qt.QWidget):
             self.qtgui_time_sink_x_2.set_line_alpha(i, alphas[i])
         
         self._qtgui_time_sink_x_2_win = sip.wrapinstance(self.qtgui_time_sink_x_2.pyqwidget(), Qt.QWidget)
-        self.top_grid_layout.addWidget(self._qtgui_time_sink_x_2_win, 3,0,1,1)
-        self.qtgui_freq_sink_x_0 = qtgui.freq_sink_f(
-        	1024, #size
-        	firdes.WIN_BLACKMAN_hARRIS, #wintype
-        	0, #fc
-        	samp_rate, #bw
-        	"", #name
-        	1 #number of inputs
-        )
-        self.qtgui_freq_sink_x_0.set_update_time(0.10)
-        self.qtgui_freq_sink_x_0.set_y_axis(-140, 10)
-        self.qtgui_freq_sink_x_0.set_trigger_mode(qtgui.TRIG_MODE_FREE, 0.0, 0, "")
-        self.qtgui_freq_sink_x_0.enable_autoscale(False)
-        self.qtgui_freq_sink_x_0.enable_grid(False)
-        self.qtgui_freq_sink_x_0.set_fft_average(1.0)
-        self.qtgui_freq_sink_x_0.enable_control_panel(False)
-        
-        if not True:
-          self.qtgui_freq_sink_x_0.disable_legend()
-        
-        if "float" == "float" or "float" == "msg_float":
-          self.qtgui_freq_sink_x_0.set_plot_pos_half(not True)
-        
-        labels = ["", "", "", "", "",
-                  "", "", "", "", ""]
-        widths = [1, 1, 1, 1, 1,
-                  1, 1, 1, 1, 1]
-        colors = ["blue", "red", "green", "black", "cyan",
-                  "magenta", "yellow", "dark red", "dark green", "dark blue"]
-        alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
-                  1.0, 1.0, 1.0, 1.0, 1.0]
-        for i in xrange(1):
-            if len(labels[i]) == 0:
-                self.qtgui_freq_sink_x_0.set_line_label(i, "Data {0}".format(i))
-            else:
-                self.qtgui_freq_sink_x_0.set_line_label(i, labels[i])
-            self.qtgui_freq_sink_x_0.set_line_width(i, widths[i])
-            self.qtgui_freq_sink_x_0.set_line_color(i, colors[i])
-            self.qtgui_freq_sink_x_0.set_line_alpha(i, alphas[i])
-        
-        self._qtgui_freq_sink_x_0_win = sip.wrapinstance(self.qtgui_freq_sink_x_0.pyqwidget(), Qt.QWidget)
-        self.top_grid_layout.addWidget(self._qtgui_freq_sink_x_0_win, 5,1,1,1)
+        self.top_grid_layout.addWidget(self._qtgui_time_sink_x_2_win, 2,0,1,1)
         self.low_pass_filter_0_0 = filter.fir_filter_ccf(10, firdes.low_pass(
         	1, samp_rate, fL, fL/2, firdes.WIN_HAMMING, 6.76))
         self.blocks_multiply_xx_1 = blocks.multiply_vcc(1)
@@ -193,7 +162,7 @@ class top_block(gr.top_block, Qt.QWidget):
         self.Time_RX = qtgui.time_sink_f(
         	1024, #size
         	samp_rate, #samp_rate
-        	"", #name
+        	"Rx Signal", #name
         	1 #number of inputs
         )
         self.Time_RX.set_update_time(0.10)
@@ -235,7 +204,7 @@ class top_block(gr.top_block, Qt.QWidget):
             self.Time_RX.set_line_alpha(i, alphas[i])
         
         self._Time_RX_win = sip.wrapinstance(self.Time_RX.pyqwidget(), Qt.QWidget)
-        self.top_grid_layout.addWidget(self._Time_RX_win, 5,0,1,1)
+        self.top_grid_layout.addWidget(self._Time_RX_win, 3,0,1,1)
         self.Freq_RX_0 = qtgui.freq_sink_c(
         	8192, #size
         	firdes.WIN_BLACKMAN_hARRIS, #wintype
@@ -276,7 +245,7 @@ class top_block(gr.top_block, Qt.QWidget):
             self.Freq_RX_0.set_line_alpha(i, alphas[i])
         
         self._Freq_RX_0_win = sip.wrapinstance(self.Freq_RX_0.pyqwidget(), Qt.QWidget)
-        self.top_grid_layout.addWidget(self._Freq_RX_0_win, 6,0,1,1)
+        self.top_grid_layout.addWidget(self._Freq_RX_0_win, 3,1,1,1)
         self.Freq_RX = qtgui.freq_sink_c(
         	1024, #size
         	firdes.WIN_BLACKMAN_hARRIS, #wintype
@@ -290,7 +259,7 @@ class top_block(gr.top_block, Qt.QWidget):
         self.Freq_RX.set_trigger_mode(qtgui.TRIG_MODE_FREE, 0.0, 0, "")
         self.Freq_RX.enable_autoscale(False)
         self.Freq_RX.enable_grid(False)
-        self.Freq_RX.set_fft_average(1.0)
+        self.Freq_RX.set_fft_average(0.1)
         self.Freq_RX.enable_control_panel(False)
         
         if not True:
@@ -317,14 +286,13 @@ class top_block(gr.top_block, Qt.QWidget):
             self.Freq_RX.set_line_alpha(i, alphas[i])
         
         self._Freq_RX_win = sip.wrapinstance(self.Freq_RX.pyqwidget(), Qt.QWidget)
-        self.top_grid_layout.addWidget(self._Freq_RX_win, 3,1,1,1)
+        self.top_grid_layout.addWidget(self._Freq_RX_win, 2,1,1,1)
 
         ##################################################
         # Connections
         ##################################################
         self.connect((self.analog_sig_source_x_0, 0), (self.blocks_multiply_xx_0, 1))    
         self.connect((self.blocks_complex_to_mag_0, 0), (self.Time_RX, 0))    
-        self.connect((self.blocks_complex_to_mag_0, 0), (self.qtgui_freq_sink_x_0, 0))    
         self.connect((self.blocks_multiply_xx_0, 0), (self.low_pass_filter_0_0, 0))    
         self.connect((self.blocks_multiply_xx_1, 0), (self.Freq_RX_0, 0))    
         self.connect((self.low_pass_filter_0_0, 0), (self.Freq_RX, 0))    
@@ -349,7 +317,6 @@ class top_block(gr.top_block, Qt.QWidget):
         self.Freq_RX_0.set_frequency_range(0, self.samp_rate)
         self.Time_RX.set_samp_rate(self.samp_rate)
         self.low_pass_filter_0_0.set_taps(firdes.low_pass(1, self.samp_rate, self.fL, self.fL/2, firdes.WIN_HAMMING, 6.76))
-        self.qtgui_freq_sink_x_0.set_frequency_range(0, self.samp_rate)
         self.qtgui_time_sink_x_2.set_samp_rate(self.samp_rate)
 
     def get_gain(self):
@@ -372,6 +339,7 @@ class top_block(gr.top_block, Qt.QWidget):
 
     def set_fc(self, fc):
         self.fc = fc
+        self._fc_callback(self.fc)
         self.uhd_usrp_source_0.set_center_freq(self.fc, 0)
 
     def get_fL(self):

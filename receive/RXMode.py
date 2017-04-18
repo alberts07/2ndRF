@@ -56,9 +56,9 @@ def initPins():
 	wiringPi.pinMode (GPIO1, OUTPUT)
 	wiringPi.pinMode (GPIO2, OUTPUT)
 
-    wiringPi.digitalWrite(NS, OFF)
-    wiringPi.digitalWrite(SWITCH, OFF)
-    wiringPi.digitalWrite(GPIO2, OFF)
+        wiringPi.digitalWrite(NS, OFF)
+        wiringPi.digitalWrite(SWITCH, OFF)
+        wiringPi.digitalWrite(GPIO2, OFF)
 
 
 def putToServer(cmd, buff):
@@ -94,10 +94,10 @@ def killClient():
 
 if __name__ == "__main__":
 
-    # gpsinfo = GPS_runner.runner()  # gpsinfo = [str(MSODobject.timestamp), MSODobject.lat, MSODobject.lon, MSODobject.altitude]
+    gpsinfo = GPS_runner.runner()  # gpsinfo = [str(MSODobject.timestamp), MSODobject.lat, MSODobject.lon, MSODobject.altitude]
 
-    gpsinfo = "GPS data goes right here"
-    gpsinfo = gpsinfo + "\n\r"
+    #gpsinfo = "GPS data goes right here"
+    gpsinfo = str(gpsinfo) + "\n\r"
     data = numpy.fromfile("RXfile")
     outFilename = "data.csv"
 
