@@ -8,13 +8,13 @@
 import math
 from xlrd import open_workbook # http://pypi.python.org/pypi/xlrd
 from xlutils.copy import copy
-import GPS_runner
 import numpy
 import time
 import top_block
 import socket
 import scipy
-import wiringPi
+import gpslib.GPS_runner as GPS_runner
+import gpio.wiringPi as wiringPi
 import struct
 #from datetime import datetime
 
@@ -29,18 +29,19 @@ GPIO0  = 0 	# Physical pin 5
 GPIO1  = 15	# Physical pin 8
 GPIO2  = 21	# Physical pin 24
 GPIO3  = 11	# Physical pin 20
-GPIO4  = 2  # Physical pin 13
-GPIO5  = 3  # physical pin 17
-GPIO6  = 4  # Physcial pin 18
-GPIO7  = 6  # Physcial pin 26
-GPIO8  = 22 # Physcial pin 19
-GPIO9  = 27 # Physical pin 15
+GPIO4  = 2      # Physical pin 13
+GPIO5  = 3      # physical pin 17
+GPIO6  = 4      # Physcial pin 18
+GPIO7  = 6      # Physcial pin 26
+GPIO8  = 22     # Physcial pin 19
+GPIO9  = 27     # Physical pin 15
 
+# GPIO Pins by name
 SWITCH = 15
 NS     = 0
 GND    = 21
 
-
+# Set up the GPIO pins, and make sure they are all turned off
 def initPins():
 	wiringPi.wiringPiSetup();
 	wiringPi.pinMode (GPIO0, OUTPUT)
@@ -169,10 +170,10 @@ def killClient():
     sock.send("QUIT")
     sock.close()
 
-def sendMessage(rowdata):
+def buildMessage(rowdata, stuff):
 	# strarray=runner()
 
-	A={
+	loc={
 	    "version": "1.0.16",
 	    "messageType": "Loc",
 	    "sensorId": "101010101",
@@ -185,7 +186,23 @@ def sendMessage(rowdata):
 	    "altitude": float(rowdata[3]),
 	    "timeZone": "America_Denver"
 	}
-	return A
+
+        NF = {
+	    "version": "1.0.16",
+	    "messageType": "NF",
+	    "sensorId": "101010101",
+	    "sensorKey": 846859034,
+	    "time": time.time(),
+	    "mobility": "Stationary",
+	    "environment": "Outdoor",
+	    "latitude": float(rowdata[1]),
+	    "longitude": float(rowdata[2]),
+	    "altitude": float(rowdata[3]),
+	    "timeZone": "UTC",
+            "datums": stuff
+	}
+        
+	return loc,NF
 
 
 
@@ -240,7 +257,7 @@ if __name__ == "__main__":
     print(data)
     row = filewrite(data)
 
-    #row = sendMessage(rowdata):
+    #loc,NF = buildMessage(rowdata, data):
 
     outFilename = "data.csv"
     cmd = "PUT " + outFilename

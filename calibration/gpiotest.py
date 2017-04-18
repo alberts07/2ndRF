@@ -1,4 +1,4 @@
-import wiringPi
+import gpio.wiringPi as wiringPi
 
 #This is the website for the Physical Pin out for Odroid XU4
 #http://odroid.com/dokuwiki/doku.php?id=en:xu3_hardware_gpio
