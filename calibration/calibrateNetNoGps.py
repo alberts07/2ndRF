@@ -93,14 +93,20 @@ def NoiseFig(N2,N1):
 
     #N2 = N2**2 / 50
     #print(N2)
-    N2 = N2.mean()
+    
+
+    
+    
     #N2 = 10 * numpy.log10(N2)
-
+    N2 = N2.mean()
     #N1 = N1**2 / 50
+    print('\n')
+    
     #print(N1)
-    N1 = N1.mean()
+    
+    
     #N1 = 10 * numpy.log10(N1)
-
+    N1 = N1.mean()
     YF=N2/N1
     print('The YFcalc is %f' %YF)
     NF= ENR-10*numpy.log10(YF-1)
@@ -204,53 +210,63 @@ if __name__ == "__main__":
 
     fileInit()
     initPins()
-    wiringPi.digitalWrite(SWITCH, ON)
-    time.sleep(1)
-    raw_input("Verify the switch has turned on and then press ENTER")
+    data = None
+    while data == None or (data.dtype == float and numpy.isnan(data)) :
+    	wiringPi.digitalWrite(SWITCH, ON)
+    	time.sleep(1)
+    	raw_input("Verify the switch has turned on and then press ENTER")
 
 
-    print("The noise with the noise source on will now be calculated")
+    	print("The noise with the noise source on will now be calculated")
 
-    wiringPi.digitalWrite(NS, ON)
-    print("5 seconds until testing")
-    time.sleep(5)
-    print("Continuing test")
+        wiringPi.digitalWrite(NS, ON)
+        print("5 seconds until testing")
+        time.sleep(10)
+        print("Continuing test")
 
-    runGNU(top_block)
-    #Ends in the script
+        runGNU(top_block)
+        #Ends in the script
 
-    N2 = readBinFile("Power")
-    # The system should turn the noise source on now
-    raw_input("Press ENTER to turn off the noise source and continue")
+        N2 = readBinFile("Power")
+        # The system should turn the noise source on now
+        raw_input("Press ENTER to turn off the noise source and continue")
 
-    wiringPi.digitalWrite(NS, OFF)
+        wiringPi.digitalWrite(NS, OFF)
 
-    print("Noise source turning off")
-    time.sleep(5)
-    print("Continuing test")
+        print("Noise source turning off")
+        time.sleep(10)
+        print("Continuing test")
 
-    # Call SDR
-    runGNU(top_block)
-    # Ends in the script
-    time.sleep(5)
-    N1 = readBinFile("Power")
+        # Call SDR
+        runGNU(top_block)
+        # Ends in the script
+        time.sleep(5)
+        N1 = readBinFile("Power")
 
-    data = NoiseFig(N2,N1)
-    print(data)
-    #row = filewrite(data)
+        data = NoiseFig(N2,N1)
+        if data.dtype == float and numpy.isnan(data):
+            print("The calculation was not valid, recalculating")
+	    wiringPi.digitalWrite(GPIO0, OFF)
+            wiringPi.digitalWrite(GPIO1, OFF)
+            wiringPi.digitalWrite(GPIO2, OFF)
 
-    #loc,NF = buildMessage(rowdata, data):
+            continue
+        print("This is data")        
+        #print(data)
+        #row = filewrite(data)
 
-    outFilename = "data.csv"
-    cmd = "PUT " + outFilename
-    putToServer(cmd, data)
+        #loc,NF = buildMessage(rowdata, data):
 
-    # Now wait to receive another response
-    buff = sock.recv(1024)
-    print("Received: " + buff)
-    killClient()
-    wiringPi.digitalWrite(GPIO0, OFF)
-    wiringPi.digitalWrite(GPIO1, OFF)
-    wiringPi.digitalWrite(GPIO2, OFF)
+        outFilename = "data.csv"
+        cmd = "PUT " + outFilename
+        putToServer(cmd, data)
+
+        # Now wait to receive another response
+        buff = sock.recv(1024)
+        print("Received: " + buff)
+        killClient()
+        wiringPi.digitalWrite(GPIO0, OFF)
+        wiringPi.digitalWrite(GPIO1, OFF)
+        wiringPi.digitalWrite(GPIO2, OFF)
 
 
