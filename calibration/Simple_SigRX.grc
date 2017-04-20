@@ -38,7 +38,7 @@
     </param>
     <param>
       <key>generate_options</key>
-      <value>hb_qt_gui</value>
+      <value>qt_gui</value>
     </param>
     <param>
       <key>hier_block_src_path</key>
@@ -82,6 +82,69 @@
     </param>
   </block>
   <block>
+    <key>variable_qtgui_range</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(664, 0)</value>
+    </param>
+    <param>
+      <key>gui_hint</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>gain</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value></value>
+    </param>
+    <param>
+      <key>min_len</key>
+      <value>200</value>
+    </param>
+    <param>
+      <key>orient</key>
+      <value>Qt.Horizontal</value>
+    </param>
+    <param>
+      <key>start</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>step</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>stop</key>
+      <value>30</value>
+    </param>
+    <param>
+      <key>rangeType</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>widget</key>
+      <value>counter_slider</value>
+    </param>
+  </block>
+  <block>
     <key>variable</key>
     <param>
       <key>comment</key>
@@ -105,7 +168,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>32000</value>
+      <value>1E6</value>
     </param>
   </block>
   <block>
@@ -128,7 +191,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>1</value>
+      <value>0</value>
     </param>
     <param>
       <key>file</key>
@@ -136,7 +199,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(448, 254)</value>
+      <value>(496, 302)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -175,11 +238,11 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>1</value>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(280, 268)</value>
+      <value>(328, 316)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -864,7 +927,7 @@
     </param>
     <param>
       <key>ant0</key>
-      <value></value>
+      <value>TX/RX</value>
     </param>
     <param>
       <key>bw0</key>
@@ -888,7 +951,7 @@
     </param>
     <param>
       <key>gain0</key>
-      <value>0</value>
+      <value>gain</value>
     </param>
     <param>
       <key>ant10</key>

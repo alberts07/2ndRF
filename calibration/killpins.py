@@ -1,4 +1,4 @@
-import wiringPi
+import gpiolib.wiringPi as wiringPi
 import time
 #Define 4 GPIO pins
 
