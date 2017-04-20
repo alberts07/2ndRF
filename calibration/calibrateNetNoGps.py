@@ -43,14 +43,14 @@ GND    = 21
 
 # Set up the GPIO pins, and make sure they are all set low initially
 def initPins():
-	wiringPi.wiringPiSetup();
-	wiringPi.pinMode (GPIO0, OUTPUT)
-	wiringPi.pinMode (GPIO1, OUTPUT)
-	wiringPi.pinMode (GPIO2, OUTPUT)
+    wiringPi.wiringPiSetup();
+    wiringPi.pinMode (GPIO0, OUTPUT)
+    wiringPi.pinMode (GPIO1, OUTPUT)
+    wiringPi.pinMode (GPIO2, OUTPUT)
 
-        wiringPi.digitalWrite(NS, OFF)
-        wiringPi.digitalWrite(SWITCH, OFF)
-        wiringPi.digitalWrite(GPIO2, OFF)
+    wiringPi.digitalWrite(NS, OFF)
+    wiringPi.digitalWrite(SWITCH, OFF)
+    wiringPi.digitalWrite(GPIO2, OFF)
 
 
 
@@ -147,19 +147,19 @@ def filewrite(data):
     path = '~/Documents/test'
     finalpath ='/home/user/Documents/test/NoiseFigure.csv'
     row_count = sum(1 for row in csv.reader( open('NoiseFigure.csv') ) )
-    print row_count
+    print (row_count)
     if row_count < 3:
         fd = open('NoiseFigure.csv','a')
         fd.write(data)
         fd.write("\n")
         fd.close()
     else:
-		os.rename('NoiseFigure.csv','04-13-17.csv')
-		fileInit()
-		fd = open('NoiseFigure.csv','a')
-		fd.write(data)
-		fd.write("\n")
-		fd.close()
+        os.rename('NoiseFigure.csv','04-13-17.csv')
+        fileInit()
+        fd = open('NoiseFigure.csv','a')
+        fd.write(data)
+        fd.write("\n")
+        fd.close()
 
 def putToServer(cmd, buff):
     # First connect to the server, then send the message
@@ -192,9 +192,9 @@ def killClient():
         sock.close()
 
 def buildMessage(rowdata, stuff):
-        # strarray=runner()
-        
-	loc={
+    # strarray=runner()
+
+    loc={
 	        "version": "1.0.16",
 	        "messageType": "Loc",
 	        "sensorId": "101010101",
@@ -207,7 +207,6 @@ def buildMessage(rowdata, stuff):
 	        "altitude": float(rowdata[3]),
 	        "timeZone": "America_Denver"
 	}
-        
     NF = {
 	        "version": "1.0.16",
 	        "messageType": "NF",
