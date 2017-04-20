@@ -71,6 +71,13 @@ while quit == False:
                 print "file " + buffer[4:] + " opened"
                 remote.send("READY")
 
+                # Next message should contain the file data
+                buffer = remote.recv(32000)
+                print(buffer)
+                fp = open(filename, "wb+")
+                fp.write(buffer)
+                fp.close()
+
             # If there was an error, print the buffer received and send 'ERROR'
             else:
                 remote.send("ERROR")
