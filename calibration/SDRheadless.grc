@@ -105,7 +105,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>5</value>
+      <value>0</value>
     </param>
   </block>
   <block>
@@ -132,7 +132,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>3.625E9</value>
+      <value>3.6E9</value>
     </param>
   </block>
   <block>
@@ -609,7 +609,7 @@
     </param>
     <param>
       <key>num_items</key>
-      <value>20</value>
+      <value>200</value>
     </param>
     <param>
       <key>type</key>
@@ -1548,7 +1548,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(8, 216)</value>
+      <value>(8, 223)</value>
     </param>
     <param>
       <key>_rotation</key>
