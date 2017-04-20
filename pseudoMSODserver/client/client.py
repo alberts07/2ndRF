@@ -1,24 +1,18 @@
 import socket
 
-# Set up the socket for the client
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM, 0)
-#print("socket made")
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM,0)
 
-serverIP = "192.168.1.100"
-print("Server IP: " +serverIP)
+serverIP = "128.138.65.210"
 
-port = 18999 # This is just a random port chosen to try to avoid other used ones
-print("Port: " + str(port))
+port = 18997
 
-sock.connect((serverIP, port))
-#print("connected")
+if sock.connect((serverIP,port)):
+    print("connected")
 
-msg = "2ndRF"
-sock.send(msg)
-print("Sent: "+msg)
+sock.send("2ndRF")
 
 resp = sock.recv(1024)
-print("Response: "+resp)
 
+print(resp)
 
 sock.close()
