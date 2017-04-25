@@ -168,13 +168,14 @@ def filewrite(data):
         fd.write("\n")
         fd.close()
     else:
-        os.rename('NoiseFigure.csv','04-13-17.csv')
+        newfilename = "date"+data[0]+".csv"
+        os.rename('NoiseFigure.csv',newfilename)
         fileInit()
         fd = open('NoiseFigure.csv','a')
         fd.write(data)
         fd.write("\n")
         fd.close()
-    return data
+    return data,newfilename
 
 def putToServer(cmd, buff):
     # First connect to the server, then send the message
@@ -216,6 +217,7 @@ serverIP = '172.21.74.177'
 #serverIP = '192.168.130.100'
 
 if __name__ == "__main__":
+#def calabrate():
 
     fileInit()
     initPins()
@@ -229,7 +231,7 @@ if __name__ == "__main__":
     	print("The noise with the noise source on will now be calculated")
 
         wiringPi.digitalWrite(NS, ON)
-        print("5 seconds until testing")
+        print("10 seconds until testing")
         time.sleep(10)
         print("Continuing test")
 
@@ -259,15 +261,16 @@ if __name__ == "__main__":
             wiringPi.digitalWrite(GPIO1, OFF)
             wiringPi.digitalWrite(GPIO2, OFF)
 
+            # If the noise figure received was not good,
+            # recalculate
             continue
-        print("This is data")        
-        #print(data)
-        #row = filewrite(data)
 
-        #loc,NF = buildMessage(rowdata, data):
-
-        outFilename = "data.csv"
-        cmd = "PUT " + outFilename
+        print("This is the data")        
+        print(data)
+        data,outfilename = filewrite(data)
+        # outFilename = "data.csv"
+        
+        cmd = "PUT " + outfilename
         putToServer(cmd, data)
 
         # Now wait to receive another response
