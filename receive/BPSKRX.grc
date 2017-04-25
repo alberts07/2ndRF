@@ -147,7 +147,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(312, 85)</value>
+      <value>(424, 176)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -160,6 +160,69 @@
     <param>
       <key>value</key>
       <value>3.65E9</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_qtgui_range</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1032, 80)</value>
+    </param>
+    <param>
+      <key>gui_hint</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>ferror</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value></value>
+    </param>
+    <param>
+      <key>min_len</key>
+      <value>200</value>
+    </param>
+    <param>
+      <key>orient</key>
+      <value>Qt.Horizontal</value>
+    </param>
+    <param>
+      <key>start</key>
+      <value>int(-10E3)</value>
+    </param>
+    <param>
+      <key>step</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>stop</key>
+      <value>int(10E3)</value>
+    </param>
+    <param>
+      <key>rangeType</key>
+      <value>int</value>
+    </param>
+    <param>
+      <key>widget</key>
+      <value>counter_slider</value>
     </param>
   </block>
   <block>
@@ -438,7 +501,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>FB*10</value>
+      <value>FB</value>
     </param>
   </block>
   <block>
@@ -555,7 +618,7 @@
     </param>
     <param>
       <key>freq</key>
-      <value>Fs</value>
+      <value>ferror</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -587,7 +650,7 @@
     </param>
     <param>
       <key>samp_rate</key>
-      <value>FB</value>
+      <value>FB*10</value>
     </param>
     <param>
       <key>waveform</key>
@@ -771,7 +834,7 @@
     </param>
     <param>
       <key>file</key>
-      <value>/dev/pts/8</value>
+      <value>/dev/pts/4</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -959,7 +1022,7 @@
     </param>
     <param>
       <key>decim</key>
-      <value>10</value>
+      <value>100</value>
     </param>
     <param>
       <key>_enabled</key>
