@@ -56,7 +56,7 @@ while quit == False:
 
     # Maintain the connction until told to quit, this loop will exit first
     while quit == False:
-        print "Waiting for request"
+        print("Waiting for request")
         buffer = ""
         buffer = remote.recv(16384)
 
@@ -68,14 +68,18 @@ while quit == False:
             filename = buffer[4:]
 
             if filename:
-                print "file " + buffer[4:] + " opened"
                 remote.send("READY")
 
                 # Next message should contain the file data
-                buffer = remote.recv(32000)
-                print(buffer)
+                databuffer = ""
+                databuffer = remote.recv(16384)
+                print("Received >>>>>>>>>>>>>>>>")
+                #databuffer = float(databuffer)
+                print(databuffer)
                 fp = open(filename, "wb+")
-                fp.write(buffer)
+                if fp:
+                    print "file " + filename + " opened"
+                fp.write(databuffer)
                 fp.close()
 
             # If there was an error, print the buffer received and send 'ERROR'
@@ -109,7 +113,7 @@ while quit == False:
                 fp.write(buffer)
 
                 fp.close()
-        remote.send("Rx'd file")
+        remote.send("Rx a file")
 
 # Close the program down
 remote.close()
