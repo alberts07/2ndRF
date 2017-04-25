@@ -16,11 +16,6 @@ import scipy
 import gpslib.GPS_runner as GPS_runner
 import gpiolib.wiringPi as wiringPi
 import struct
-import csv
-
-import decimal
-
-
 #from datetime import datetime
 
 #This is the website for the Physical Pin out for Odroid XU4
@@ -48,22 +43,23 @@ GND    = 21
 
 # Set up the GPIO pins, and make sure they are all set low initially
 def initPins():
-    wiringPi.wiringPiSetup();
-    wiringPi.pinMode (GPIO0, OUTPUT)
-    wiringPi.pinMode (GPIO1, OUTPUT)
-    wiringPi.pinMode (GPIO2, OUTPUT)
+	wiringPi.wiringPiSetup();
+	wiringPi.pinMode (GPIO0, OUTPUT)
+	wiringPi.pinMode (GPIO1, OUTPUT)
+	wiringPi.pinMode (GPIO2, OUTPUT)
 
-    wiringPi.digitalWrite(NS, OFF)
-    wiringPi.digitalWrite(SWITCH, OFF)
-    wiringPi.digitalWrite(GPIO2, OFF)
+        wiringPi.digitalWrite(NS, OFF)
+        wiringPi.digitalWrite(SWITCH, OFF)
+        wiringPi.digitalWrite(GPIO2, OFF)
 
 
 
+# todo update to actual file location when I can.
+# todo update ENR when we know it
 # todo place try except block
 
 def readBinFile(file):
     f = scipy.fromfile(open(file), dtype = scipy.float32)
-
     return f
 
 def runGNU(top_block_file):
@@ -72,9 +68,12 @@ def runGNU(top_block_file):
 
 
 def NoiseFig(N2,N1):
-
+    #N2 = numpy.fft.fft(numpy.real(N2[:len(N2)/2]))
+    #N1 = numpy.fft.fft(numpy.real(N1[:len(N1)/2]))
     ENR = 30
-
+    print(N2)
+    print(N1)
+    #ENR = 14.85
 
     # Testing Doug's stuff
     #Z = 50
@@ -93,30 +92,21 @@ def NoiseFig(N2,N1):
 
     #N2 = N2**2 / 50
     #print(N2)
-    
-
-    
-    
+    N2 = N2.mean()
     #N2 = 10 * numpy.log10(N2)
-    N2 = N2[::2]
+
     #N1 = N1**2 / 50
-    
     #print(N1)
-    
-    
+    N1 = N1.mean()
     #N1 = 10 * numpy.log10(N1)
-    N1 = N1[::2]
-    FTN2 = numpy.fft.ftt(N2)
-    FTN1 = numpy.fft.ftt(N1)
-    absN2 = abs(FTN2)
-    absN1 = abs(FTN1)
-    logN2 = 20 * numpy.log10(absN2)
-    logN1 = 20 * numpy.log10(absN1)
-    meanN2 = numpy.mean(logN2)
-    meanN1 = numpy.mean(logN1)
-    linN2 = 10**(meanN2 / 10)
-    linN1 = 10 ** (meanN1 / 10)
-    YF=linN2/linN1
+
+    #N2 = 10**(N2/10)
+    #N1 = 10**(N1/10)
+    
+    print(N2)
+    print(N1)
+    YF=N2/N1
+   # YF = YF.mean()
     print('The YFcalc is %f' %YF)
     NF= ENR-10*numpy.log10(YF-1)
     print('The noise figure is %f'%NF)
@@ -162,27 +152,24 @@ def filewrite(data):
     path = '~/Documents/test'
     finalpath ='/home/user/Documents/test/NoiseFigure.csv'
     row_count = sum(1 for row in csv.reader( open('NoiseFigure.csv') ) )
+    print row_count
     if row_count < 3:
-        fd = open('NoiseFigure.csv','wb')
-        fd.write(data)
-        fd.write("\n")
-        fd.close()
-    else:
-        os.rename('NoiseFigure.csv','04-13-17.csv')
-        fileInit()
         fd = open('NoiseFigure.csv','a')
         fd.write(data)
         fd.write("\n")
         fd.close()
-    return data
+    else:
+		os.rename('NoiseFigure.csv','04-13-17.csv')
+		fileInit()
+		fd = open('NoiseFigure.csv','a')
+		fd.write(data)
+		fd.write("\n")
+		fd.close()
 
 def putToServer(cmd, buff):
     # First connect to the server, then send the message
     sock.connect((serverIP, port))
     sock.send(cmd)
-    #print("sending: ")
-    #print(cmd)
-    #print(buff)
 
     # Wait for the response from the server indicating it's ready
     while True:
@@ -190,7 +177,9 @@ def putToServer(cmd, buff):
         resp = sock.recv(1024)
         print("RECIEVED " + resp)
         if resp[0:5] == "READY":
-            sock.send(str(buff))
+
+            # send the file
+            sock.send(buff)
             break
 
         # Handle a server side error
@@ -199,83 +188,113 @@ def putToServer(cmd, buff):
             break
         # Handle unknowns
         else:
-            print("Didn't understand response, killing client")
+            print("Didn't understand response")
             sock.send("ERROR 2")
-            killClient()
+        killClient()
 
 def killClient():
         sock.send("QUIT")
         sock.close()
+
+def buildMessage(rowdata, stuff):
+        # strarray=runner()
+        
+    loc={
+	        "version": "1.0.16",
+	        "messageType": "Loc",
+	        "sensorId": "101010101",
+	        "sensorKey": 846859034,
+	        "time": time.time(),
+	        "mobility": "Stationary",
+	        "environment": "Outdoor",
+	        "latitude": float(rowdata[1]),
+	        "longitude": float(rowdata[2]),
+	        "altitude": float(rowdata[3]),
+	        "timeZone": "America_Denver"
+	}
+        
+    NF = {
+	        "version": "1.0.16",
+	        "messageType": "NF",
+	        "sensorId": "101010101",
+	        "sensorKey": 846859034,
+	        "time": time.time(),
+	        "mobility": "Stationary",
+	        "environment": "Outdoor",
+	        "latitude": float(rowdata[1]),
+	        "longitude": float(rowdata[2]),
+	        "altitude": float(rowdata[3]),
+	        "timeZone": "UTC",
+            "NF": stuff
+	}
+        
+    return loc,NF
+
 
 
 
 # Set up the socket for the client, these are set Globally
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM,0)
 port = 18999 # This is just a random port chosen to try to avoid a used one
-serverIP = '172.21.74.177'
-#serverIP = '192.168.130.100'
+serverIP = '192.168.130.100'
 
 if __name__ == "__main__":
 
-    fileInit()
     initPins()
-    data = None
-    while data == None or (data.dtype == float and numpy.isnan(data)) :
-    	wiringPi.digitalWrite(SWITCH, ON)
-    	time.sleep(1)
-    	raw_input("Verify the switch has turned on and then press ENTER")
+    wiringPi.digitalWrite(SWITCH, ON)
+    #raw_input("verify switch on")
 
 
-    	print("The noise with the noise source on will now be calculated")
+    print("The noise with the noise source on will now be calculated")
+    raw_input("Press ENTER to start the noise source and continue")
 
-        wiringPi.digitalWrite(NS, ON)
-        print("5 seconds until testing")
-        time.sleep(10)
-        print("Continuing test")
+    wiringPi.digitalWrite(NS, ON)
+    #print("Noise source warming up")
+    #time.sleep(5)
+    #print("10 seconds left in warmup")
+    #time.sleep(5)
+    print("5 seconds left in warmup")
+    time.sleep(5)
+    print("Continuing test")
 
-        runGNU(top_block)
-        #Ends in the script
+    runGNU(top_block)
+    #Ends in the script
 
-        N2 = readBinFile("Power")
-        # The system should turn the noise source on now
-        raw_input("Press ENTER to turn off the noise source and continue")
+    time.sleep(5)
+    N2 = readBinFile("Power")
+    #print(N2)
+    # The system should turn the noise source on now
+    raw_input("Press ENTER to turn off the noise source and continue")
 
-        wiringPi.digitalWrite(NS, OFF)
+    wiringPi.digitalWrite(NS, OFF)
 
-        print("Noise source turning off")
-        time.sleep(10)
-        print("Continuing test")
+    print("Noise source turning off")
+    time.sleep(5)
+    print("Continuing test")
 
-        # Call SDR
-        runGNU(top_block)
-        # Ends in the script
-        time.sleep(5)
-        N1 = readBinFile("Power")
+    # Call SDR
+    runGNU(top_block)
+    # Ends in the script
+    time.sleep(5)
+    N1 = readBinFile("Power")
+    #print(N1)
 
-        data = NoiseFig(N2,N1)
-        if data.dtype == float and numpy.isnan(data):
-            print("The calculation was not valid, recalculating")
-	    wiringPi.digitalWrite(GPIO0, OFF)
-            wiringPi.digitalWrite(GPIO1, OFF)
-            wiringPi.digitalWrite(GPIO2, OFF)
+    data = NoiseFig(N2,N1)
+    print(data)
+    row = filewrite(data)
 
-            continue
-        print("This is data")        
-        #print(data)
-        #row = filewrite(data)
+    #loc,NF = buildMessage(rowdata, data):
 
-        #loc,NF = buildMessage(rowdata, data):
+    outFilename = "data.csv"
+    cmd = "PUT " + outFilename
+    putToServer(cmd, row)
 
-        outFilename = "data.csv"
-        cmd = "PUT " + outFilename
-        putToServer(cmd, data)
+    # Now wait to receive another response
+    buff = sock.recv(1024)
+    print("Received: " + buff)
 
-        # Now wait to receive another response
-        buff = sock.recv(1024)
-        print("Received: " + buff)
-        killClient()
-        wiringPi.digitalWrite(GPIO0, OFF)
-        wiringPi.digitalWrite(GPIO1, OFF)
-        wiringPi.digitalWrite(GPIO2, OFF)
+    wiringPi.digitalWrite(GPIO0, OFF)
+    wiringPi.digitalWrite(GPIO1, OFF)
+    wiringPi.digitalWrite(GPIO2, OFF)
 
 
