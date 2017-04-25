@@ -98,16 +98,25 @@ def NoiseFig(N2,N1):
     
     
     #N2 = 10 * numpy.log10(N2)
-    N2 = N2.mean()
+    N2 = N2[::2]
     #N1 = N1**2 / 50
-    print('\n')
     
     #print(N1)
     
     
     #N1 = 10 * numpy.log10(N1)
-    N1 = N1.mean()
-    YF=N2/N1
+    N1 = N1[::2]
+    FTN2 = numpy.fft.ftt(N2)
+    FTN1 = numpy.fft.ftt(N1)
+    absN2 = abs(FTN2)
+    absN1 = abs(FTN1)
+    logN2 = 20 * numpy.log10(absN2)
+    logN1 = 20 * numpy.log10(absN1)
+    meanN2 = numpy.mean(logN2)
+    meanN1 = numpy.mean(logN1)
+    linN2 = 10**(meanN2 / 10)
+    linN1 = 10 ** (meanN1 / 10)
+    YF=linN2/linN1
     print('The YFcalc is %f' %YF)
     NF= ENR-10*numpy.log10(YF-1)
     print('The noise figure is %f'%NF)
