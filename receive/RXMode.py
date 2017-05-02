@@ -93,8 +93,9 @@ def killClient():
 
 
 if __name__ == "__main__":
-
-    gpsinfo = GPS_runner.runner()  # gpsinfo = [str(MSODobject.timestamp), MSODobject.lat, MSODobject.lon, MSODobject.altitude]
+#def receiveMode():
+    # gpsinfo = [str(MSODobject.timestamp), MSODobject.lat, MSODobject.lon, MSODobject.altitude]
+    gpsinfo = GPS_runner.runner() 
 
     #gpsinfo = "GPS data goes right here"
     gpsinfo = str(gpsinfo) + "\n\r"
