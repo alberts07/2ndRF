@@ -5,6 +5,7 @@
 # Divide the power of it on by the power of it off to get the Y FAct.
 # Calculate NF by taking ENR and subtracting 10log(Yfac-1)
 # ENR is  30db but will be calculated when parts in
+
 import math
 from xlrd import open_workbook # http://pypi.python.org/pypi/xlrd
 from xlutils.copy import copy
@@ -17,7 +18,6 @@ import gpslib.GPS_runner as GPS_runner
 import gpiolib.wiringPi as wiringPi
 import struct
 import csv
-
 import decimal
 
 
@@ -30,21 +30,20 @@ import decimal
 ON     = 1
 OFF    = 0
 OUTPUT = 1
+
 GPIO0  = 0 	# Physical pin 5
 GPIO1  = 15	# Physical pin 8
-GPIO2  = 21	# Physical pin 24
-GPIO3  = 11	# Physical pin 20
-GPIO4  = 2      # Physical pin 13
-GPIO5  = 3      # physical pin 17
-GPIO6  = 4      # Physcial pin 18
-GPIO7  = 6      # Physcial pin 26
-GPIO8  = 22     # Physcial pin 19
-GPIO9  = 27     # Physical pin 15
+GPIO2  = 2      # Physical pin 13
+GPIO3  = 7      # Physical pin 15
+GPIO4  = 22     # Physcial pin 19   
+GPIO5  = 23     # physical pin 22
+GPIO6  = 11     # Physical pin 24
 
 # GPIO Pins by name
-SWITCH = 15
-NS     = 0
-GND    = 21
+SW1    = GPIO1 # 15  # Upper Band Channel
+SW2    = GPIO2 # 2   # Lower Band Channel
+SW3    = GPIO4 # 22
+NS     = GPIO6 # 11
 
 # Set up the GPIO pins, and make sure they are all set low initially
 def initPins():
@@ -52,10 +51,20 @@ def initPins():
     wiringPi.pinMode (GPIO0, OUTPUT)
     wiringPi.pinMode (GPIO1, OUTPUT)
     wiringPi.pinMode (GPIO2, OUTPUT)
+    wiringPi.pinMode (GPIO3, OUTPUT)
+    wiringPi.pinMode (GPIO4, OUTPUT)
+    wiringPi.pinMode (GPIO5, OUTPUT)
+    wiringPi.pinMode (GPIO6, OUTPUT)
 
-    wiringPi.digitalWrite(NS, OFF)
-    wiringPi.digitalWrite(SWITCH, OFF)
-    wiringPi.digitalWrite(GPIO2, OFF)
+    wiringPi.digitalWrite(GPIO6, OFF) # NOISE SOURCE
+    time.sleep(2)
+    wiringPi.digitalWrite(GPIO0, OFF)
+    wiringPi.digitalWrite(GPIO1, OFF)
+    wiringPi.digitalWrite(GPIO2, ON ) # ON TO BEGIN WITH, IN THIS ROUTINE
+    wiringPi.digitalWrite(GPIO3, OFF)
+    wiringPi.digitalWrite(GPIO4, OFF)
+    wiringPi.digitalWrite(GPIO5, OFF)
+
 
 
 
@@ -121,6 +130,7 @@ def filewrite(data):
     path = '~/Documents/test'
     finalpath ='/home/user/Documents/test/NoiseFigure.csv'
     row_count = sum(1 for row in csv.reader( open('NoiseFigure.csv') ) )
+    
     if row_count < 3:
         fd = open('NoiseFigure.csv','wb')
         fd.write(data)
@@ -134,6 +144,8 @@ def filewrite(data):
         fd.write(data)
         fd.write("\n")
         fd.close()
+
+        
     return data,newfilename
 
 def putToServer(cmd, buff):
@@ -176,55 +188,52 @@ serverIP = '172.21.74.177'
 #serverIP = '192.168.130.100'
 
 if __name__ == "__main__":
-#def calabrate():
+#def calculabrate():
 
+    # Set up
     fileInit()
     initPins()
     data = None
+
+    # Loop until acceptable data is found
     while data == None or (data.dtype == float and numpy.isnan(data)) :
-    	wiringPi.digitalWrite(SWITCH, ON)
+    	wiringPi.digitalWrite(SW1, ON)
     	time.sleep(1)
-    	raw_input("Verify the switch has turned on and then press ENTER")
-
-
-    	print("The noise with the noise source on will now be calculated")
+    	#### raw_input("Verify the switch has turned on and then press ENTER")
+    	print("The noise figure with the noise source on will now be calculated")
 
         wiringPi.digitalWrite(NS, ON)
-        print("10 seconds until testing")
-        time.sleep(10)
-        print("Continuing test")
+        time.sleep(1)
+        print("Testing")
 
+        # Run top_block which puts data into a local file
         runGNU(top_block)
-        #Ends in the script
 
         N2 = readBinFile("Power")
         # The system should turn the noise source on now
-        raw_input("Press ENTER to turn off the noise source and continue")
+        #### raw_input("Press ENTER to turn off the noise source and continue")
 
         wiringPi.digitalWrite(NS, OFF)
-
-        print("Noise source turning off")
-        time.sleep(10)
-        print("Continuing test")
+        time.sleep(2)
+        print("Testing with noise source off")
 
         # Call SDR
         runGNU(top_block)
-        # Ends in the script
-        time.sleep(5)
         N1 = readBinFile("Power")
 
         data = NoiseFig(N2,N1)
         if data.dtype == float and numpy.isnan(data):
             print("The calculation was not valid, recalculating")
-	    wiringPi.digitalWrite(GPIO0, OFF)
-            wiringPi.digitalWrite(GPIO1, OFF)
-            wiringPi.digitalWrite(GPIO2, OFF)
+	    wiringPi.digitalWrite(NS, OFF)
+            time.sleep(2)
+            wiringPi.digitalWrite(SW1, OFF)
+            wiringPi.digitalWrite(SW3, OFF)
+            wiringPi.digitalWrite(SW2, OFF)
 
-            # If the noise figure received was not good,
-            # recalculate
+            # If the noise figure received was not good, recalculate
             continue
 
-        print("This is the data")        
+        print("This is the data: ")        
         print(data)
         data,outfilename = filewrite(data)
         # outFilename = "data.csv"
@@ -236,11 +245,24 @@ if __name__ == "__main__":
         buff = sock.recv(1024)
         print("Received: " + buff)
         killClient()
-        wiringPi.digitalWrite(GPIO0, OFF)
-        wiringPi.digitalWrite(GPIO1, OFF)
-        wiringPi.digitalWrite(GPIO2, OFF)
+        wiringPi.digitalWrite(NS, OFF)
+        time.sleep(2)
+        wiringPi.digitalWrite(SW3, OFF)
+        wiringPi.digitalWrite(SW2, OFF)
 
 
+#calculabrate()
+
+
+
+
+
+
+
+
+
+
+        
 
 """ The code below is not used right now, but should be saved for now. """
 
